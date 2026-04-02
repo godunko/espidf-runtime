@@ -25,127 +25,77 @@
 -- <http://www.gnu.org/licenses/>.                                          --
 --                                                                          --
 -- GNAT was originally developed  by the GNAT team at  New York University. --
--- It is now maintained by Ada Core Technologies Inc (http://www.gnat.com). --
+-- Extensive contributions were provided by Ada Core Technologies Inc.      --
 --                                                                          --
 ------------------------------------------------------------------------------
 
---  This is the bare board version of this package for zcx using dwarf
---  with Ada.Unchecked_Conversion;
---  with System.Storage_Elements; use System.Storage_Elements;
+--  This is the default version of this package
+
+--  Note: this unit must be compiled using -fno-optimize-sibling-calls.
+--  See comment below in body of Call_Chain for details on the reason.
 
 package body System.Traceback is
 
---   use System.Traceback_Entries;
+--   procedure Call_Chain
+--     (Traceback   : System.Address;
+--      Max_Len     : Natural;
+--      Len         : out Natural;
+--      Exclude_Min : System.Address := System.Null_Address;
+--      Exclude_Max : System.Address := System.Null_Address;
+--      Skip_Frames : Natural := 1);
+--   --  Same as the exported version, but takes Traceback as an Address
+
+   ------------------
+   -- C_Call_Chain --
+   ------------------
+
+   function C_Call_Chain
+     (Traceback : System.Address;
+      Max_Len   : Natural) return Natural
+   is
+--      Val : Natural;
+   begin
+      raise Program_Error;
+      return 0;
+--      Call_Chain (Traceback, Max_Len, Val);
+--      return Val;
+   end C_Call_Chain;
+
+--   ----------------
+--   -- Call_Chain --
+--   ----------------
 --
---   type Unwind_Reason_Code is
---     (URC_OK,
---      URC_FOREIGN_EXCEPTION_CAUGHT,
---      URC_END_OF_STACK,
---      URC_HANDLER_FOUND,
---      URC_INSTALL_CONTEXT,
---      URC_CONTINUE_UNWIND,
---      URC_FAILURE);
---   pragma Convention (C, Unwind_Reason_Code);
---   --  The _Unwind_Reason_Code enum defined by ARM EHABI document
---
---   pragma Unreferenced (URC_FOREIGN_EXCEPTION_CAUGHT,
---                        URC_END_OF_STACK,
---                        URC_HANDLER_FOUND,
---                        URC_INSTALL_CONTEXT,
---                        URC_CONTINUE_UNWIND,
---                        URC_FAILURE);
---
---   type Unwind_Context_Type is null record;
---   type Unwind_Context_Acc is access Unwind_Context_Type;
---   pragma Convention (C, Unwind_Context_Acc);
---   --  Access to the opaque _Unwind_Context type
---
---   type Unwind_Trace_Fn is access
---     function (UC : Unwind_Context_Acc; Data : System.Address)
---              return Unwind_Reason_Code;
---   pragma Convention (C, Unwind_Trace_Fn);
---   --  The _Unwind_Trace_Fn function (used for the callback)
---
---   function Unwind_Backtrace
---     (Func : Unwind_Trace_Fn;
---      Data : System.Address) return Unwind_Reason_Code;
---   pragma Import (C, Unwind_Backtrace, "_Unwind_Backtrace");
-   --  The _Unwind_Backtrace function that calls Func with Data for each frame
---
---   function Unwind_GetIP (Context : Unwind_Context_Acc) return
-   --   System.Address;
---   pragma Import (C, Unwind_GetIP, "_Unwind_GetIP");
---
---   type Tracebacks_Array_Ptr is access Tracebacks_Array (Positive);
---
---   type Callback_Params_Type is record
---      Tracebacks  : Tracebacks_Array_Ptr;
---      Max_Len     : Integer;
---      Len         : Natural;
+--   function Backtrace
+--     (Traceback   : System.Address;
+--      Len         : Integer;
 --      Exclude_Min : System.Address;
 --      Exclude_Max : System.Address;
---      Skip_Frames : Integer;
---   end record;
+--      Skip_Frames : Integer)
+--      return        Integer;
+--   pragma Import (C, Backtrace, "__gnat_backtrace");
 --
---   type Callback_Params_Acc is access all Callback_Params_Type;
---
---   function Backtrace_Callback
---     (UC   : Unwind_Context_Acc;
---      Data : System.Address) return Unwind_Reason_Code;
---   pragma Convention (C, Backtrace_Callback);
---   --  The callback for _Unwind_Backtrace, which is called for each frame
---
---   ------------------------
---   -- Backtrace_Callback --
---   ------------------------
---
---   function Backtrace_Callback
---     (UC   : Unwind_Context_Acc;
---      Data : System.Address) return Unwind_Reason_Code
+--   procedure Call_Chain
+--     (Traceback   : System.Address;
+--      Max_Len     : Natural;
+--      Len         : out Natural;
+--      Exclude_Min : System.Address := System.Null_Address;
+--      Exclude_Max : System.Address := System.Null_Address;
+--      Skip_Frames : Natural := 1)
 --   is
---      function To_Callback_Params is new Ada.Unchecked_Conversion
---        (System.Address, Callback_Params_Acc);
---      Params : constant Callback_Params_Acc := To_Callback_Params (Data);
---      --  The parameters of Call_Chain
---
---      PC : System.Address;
---
 --   begin
---      --  Exclude Skip_Frames frames from the traceback.
+--      --  Note: Backtrace relies on the following call actually creating a
+--      --  stack frame. To ensure that this is the case, it is essential to
+--      --  compile this unit without sibling call optimization.
 --
---      if Params.Skip_Frames > 0 then
---         Params.Skip_Frames := Params.Skip_Frames - 1;
---         return URC_OK;
---      end if;
+--      --  We want the underlying engine to skip its own frame plus the
+--      --  ones we have been requested to skip ourselves.
 --
---      --  If the backtrace is full, simply discard new entries
---
---      if Params.Len >= Params.Max_Len then
---         return URC_OK;
---      end if;
---
---      --  Extract the PC (register 15)
---      PC := Unwind_GetIP (UC);
---
---      --  Discard exluded values
---
---      if To_Integer (PC) in
---        To_Integer (Params.Exclude_Min) .. To_Integer (Params.Exclude_Max)
---      then
---         return URC_OK;
---      end if;
---
---      --  Append an entry
---
---      Params.Len := Params.Len + 1;
---      Params.Tracebacks (Params.Len) := PC;
---
---      return URC_OK;
---   end Backtrace_Callback;
-
-   ----------------
-   -- Call_Chain --
-   ----------------
+--      Len := Backtrace (Traceback   => Traceback,
+--                        Len         => Max_Len,
+--                        Exclude_Min => Exclude_Min,
+--                        Exclude_Max => Exclude_Max,
+--                        Skip_Frames => Skip_Frames + 1);
+--   end Call_Chain;
 
    procedure Call_Chain
      (Traceback   : in out System.Traceback_Entries.Tracebacks_Array;
@@ -153,35 +103,17 @@ package body System.Traceback is
       Len         : out Natural;
       Exclude_Min : System.Address := System.Null_Address;
       Exclude_Max : System.Address := System.Null_Address;
-      Skip_Frames : Natural        := 1)
+      Skip_Frames : Natural := 1)
    is
---      function To_Tracebacks_Array_Ptr is new Ada.Unchecked_Conversion
---        (System.Address, Tracebacks_Array_Ptr);
---
---      Params : aliased Callback_Params_Type;
---
---      Res : Unwind_Reason_Code;
---      pragma Unreferenced (Res);
---
    begin
       raise Program_Error;
---      --  Copy parameters; add 1 to Skip_Frames to ignore the caller of
---      --  Call_Chain.
+--      Call_Chain
+--        (Traceback'Address, Max_Len, Len,
+--         Exclude_Min, Exclude_Max,
 --
---      Params := (Tracebacks  => To_Tracebacks_Array_Ptr (Traceback'Address),
---                 Len         => 0,
---                 Max_Len     => Max_Len,
---                 Exclude_Min => Exclude_Min,
---                 Exclude_Max => Exclude_Max,
---                 Skip_Frames => Skip_Frames + 1);
+--         --  Skip one extra frame to skip the other Call_Chain entry as well
 --
---      --  Call the unwinder
---
---      Res := Unwind_Backtrace (Backtrace_Callback'Access, Params'Address);
---
---      --  Copy the result
---
---      Len := Params.Len;
+--         Skip_Frames => Skip_Frames + 1);
    end Call_Chain;
 
 end System.Traceback;
