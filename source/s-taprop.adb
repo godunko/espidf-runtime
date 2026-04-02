@@ -4,12 +4,187 @@
 --  This package contains all the GNULL primitives that interface directly with
 --  the underlying OS.
 
+with System.FreeRTOS;
+with System.OS_Interface;
+with System.Parameters;
+
 package body System.Task_Primitives.Operations is
+
+   use System.FreeRTOS;
+   use System.OS_Interface;
+   use System.Parameters;
+   use System.Tasking;
+
+   ----------------
+   -- Local Data --
+   ----------------
+
+   --  The followings are logically constants, but need to be initialized at
+   --  run time.
+
+   --  Environment_Task_Id : Task_Id with Unreferenced;
+   --  A variable to hold Task_Id for the environment task
+
+   --------------------
+   -- Local Packages --
+   --------------------
+
+   package Specific is
+
+      procedure Initialize (Environment_Task : Task_Id);
+      pragma Inline (Initialize);
+      --  Initialize task specific data
+
+      function Is_Valid_Task return Boolean;
+      pragma Inline (Is_Valid_Task);
+      --  Does executing thread have a TCB?
+
+      procedure Set (Self_Id : Task_Id);
+      pragma Inline (Set);
+      --  Set the self id for the current task, unless Self_Id is null, in
+      --  which case the task specific data is deleted.
+
+      function Self return Task_Id;
+      pragma Inline (Self);
+      --  Return a pointer to the Ada Task Control Block of the calling task
+
+   end Specific;
+
+   package body Specific is separate;
+   --  The body of this package is target specific
+
+   ---------------------------------
+   -- Support for foreign threads --
+   ---------------------------------
+
+   function Register_Foreign_Thread
+     (Thread         : Thread_Id;
+      Sec_Stack_Size : Size_Type := Unspecified_Size) return Task_Id;
+   --  Allocate and initialize a new ATCB for the current Thread. The size of
+   --  the secondary stack can be optionally specified.
+
+   function Register_Foreign_Thread
+     (Thread         : Thread_Id;
+      Sec_Stack_Size : Size_Type := Unspecified_Size)
+     return Task_Id is separate;
+
+   ----------
+   -- Self --
+   ----------
+
+   function Self return Task_Id renames Specific.Self;
+
+   ---------------------
+   -- Monotonic_Clock --
+   ---------------------
 
    function Monotonic_Clock return Duration is
    begin
       raise Program_Error;
       return 0.0;
    end Monotonic_Clock;
+
+   ----------------
+   -- Initialize --
+   ----------------
+
+   procedure Initialize (Environment_Task : Task_Id) is
+      --  act     : aliased struct_sigaction;
+      --  old_act : aliased struct_sigaction;
+      --  Tmp_Set : aliased sigset_t;
+      --  Result  : Interfaces.C.int;
+      --
+      --  function State
+      --    (Int : System.Interrupt_Management.Interrupt_ID) return Character;
+      --  pragma Import (C, State, "__gnat_get_interrupt_state");
+      --  --  Get interrupt state.  Defined in a-init.c
+      --  --  The input argument is the interrupt number,
+      --  --  and the result is one of the following:
+      --
+      --  Default : constant Character := 's';
+      --  --    'n'   this interrupt not set by any Interrupt_State pragma
+      --  --    'u'   Interrupt_State pragma set state to User
+      --  --    'r'   Interrupt_State pragma set state to Runtime
+      --  --    's'   Interrupt_State pragma set state to System (use "default"
+      --  --           system handler)
+
+   begin
+      --  Environment_Task_Id := Environment_Task;
+
+      Specific.Initialize (Environment_Task);
+
+      --  Environment_Task.Common.LL.Thread := pthread_self;
+      --
+      --  Interrupt_Management.Initialize;
+      --
+      --  --  Prepare the set of signals that should unblocked in all tasks
+      --
+      --  Result := sigemptyset (Unblocked_Signal_Mask'Access);
+      --  pragma Assert (Result = 0);
+      --
+      --  for J in Interrupt_Management.Interrupt_ID loop
+      --     if System.Interrupt_Management.Keep_Unmasked (J) then
+      --        Result := sigaddset (Unblocked_Signal_Mask'Access, Signal (J));
+      --        pragma Assert (Result = 0);
+      --     end if;
+      --  end loop;
+      --
+      --  --  Initialize the lock used to synchronize chain of all ATCBs
+      --
+      --  Initialize_Lock (Single_RTS_Lock'Access, RTS_Lock_Level);
+      --
+      --  Specific.Initialize (Environment_Task);
+      --
+      --  if Use_Alternate_Stack then
+      --     Environment_Task.Common.Task_Alternate_Stack :=
+      --       Alternate_Stack'Address;
+      --  end if;
+      --
+      --  --  Make environment task known here because it doesn't go through
+      --  --  Activate_Tasks, which does it for all other tasks.
+      --
+      --  Known_Tasks (Known_Tasks'First) := Environment_Task;
+      --  Environment_Task.Known_Tasks_Index := Known_Tasks'First;
+      --
+      --  Enter_Task (Environment_Task);
+      --
+      --  if State
+      --      (System.Interrupt_Management.Abort_Task_Interrupt) /= Default
+      --  then
+      --     act.sa_flags := 0;
+      --     act.sa_handler := Abort_Handler'Address;
+      --
+      --     Result := sigemptyset (Tmp_Set'Access);
+      --     pragma Assert (Result = 0);
+      --     act.sa_mask := Tmp_Set;
+      --
+      --     Result :=
+      --       sigaction
+      --         (Signal (System.Interrupt_Management.Abort_Task_Interrupt),
+      --          act'Unchecked_Access,
+      --          old_act'Unchecked_Access);
+      --     pragma Assert (Result = 0);
+      --     Abort_Handler_Installed := True;
+      --  end if;
+   end Initialize;
+
+   -------------------
+   -- Is_Valid_Task --
+   -------------------
+
+   function Is_Valid_Task return Boolean renames Specific.Is_Valid_Task;
+
+   -----------------------------
+   -- Register_Foreign_Thread --
+   -----------------------------
+
+   function Register_Foreign_Thread return Task_Id is
+   begin
+      if Is_Valid_Task then
+         return Self;
+      else
+         return Register_Foreign_Thread (xTaskGetCurrentTaskHandle);
+      end if;
+   end Register_Foreign_Thread;
 
 end System.Task_Primitives.Operations;

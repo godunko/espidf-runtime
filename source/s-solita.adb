@@ -36,20 +36,20 @@ pragma Style_Checks (All_Checks);
 --  with Ada.Exceptions;
 --  with Ada.Exceptions.Is_Null_Occurrence;
 --
---  with System.Task_Primitives.Operations;
+with System.Task_Primitives.Operations;
 --  with System.Tasking;
 --  with System.Stack_Checking;
 --  with System.Secondary_Stack;
 
 package body System.Soft_Links.Tasking is
 
---   package STPO renames System.Task_Primitives.Operations;
---   package SSL  renames System.Soft_Links;
---
+   package STPO renames System.Task_Primitives.Operations;
+   package SSL  renames System.Soft_Links;
+
 --   use Ada.Exceptions;
---
---   use type System.Secondary_Stack.SS_Stack_Ptr;
---
+
+   use type System.Secondary_Stack.SS_Stack_Ptr;
+
 --   use type System.Tasking.Task_Id;
 --   use type System.Tasking.Termination_Handler;
 
@@ -68,38 +68,38 @@ package body System.Soft_Links.Tasking is
 --   function  Get_Jmpbuf_Address return  Address;
 --   procedure Set_Jmpbuf_Address (Addr : Address);
 --   --  Get/Set Jmpbuf_Address for current task
---
---   function  Get_Sec_Stack return SST.SS_Stack_Ptr;
+
+   function  Get_Sec_Stack return SST.SS_Stack_Ptr;
 --   procedure Set_Sec_Stack (Stack : SST.SS_Stack_Ptr);
 --   --  Get/Set location of current task's secondary stack
 --
 --   procedure Timed_Delay_T (Time : Duration; Mode : Integer);
 --   --  Task-safe version of SSL.Timed_Delay
---
---   procedure Task_Termination_Handler_T  (Excep : SSL.EO);
---   --  Task-safe version of the task termination procedure
---
+
+   procedure Task_Termination_Handler_T  (Excep : SSL.EO);
+   --  Task-safe version of the task termination procedure
+
 --   function Get_Stack_Info return Stack_Checking.Stack_Access;
 --   --  Get access to the current task's Stack_Info
---
---   --------------------------
---   -- Soft-Link Get Bodies --
---   --------------------------
---
+
+   --------------------------
+   -- Soft-Link Get Bodies --
+   --------------------------
+
 --   function Get_Jmpbuf_Address return  Address is
 --   begin
 --      return STPO.Self.Common.Compiler_Data.Jmpbuf_Address;
 --   end Get_Jmpbuf_Address;
---
---   function Get_Sec_Stack return SST.SS_Stack_Ptr is
---   begin
---      return Result : constant SST.SS_Stack_Ptr :=
---        STPO.Self.Common.Compiler_Data.Sec_Stack_Ptr
---      do
---         pragma Assert (Result /= null);
---      end return;
---   end Get_Sec_Stack;
---
+
+   function Get_Sec_Stack return SST.SS_Stack_Ptr is
+   begin
+      return Result : constant SST.SS_Stack_Ptr :=
+        STPO.Self.Common.Compiler_Data.Sec_Stack_Ptr
+      do
+         pragma Assert (Result /= null);
+      end return;
+   end Get_Sec_Stack;
+
 --   function Get_Stack_Info return Stack_Checking.Stack_Access is
 --   begin
 --      return STPO.Self.Common.Compiler_Data.Pri_Stack_Info'Access;
@@ -141,17 +141,18 @@ package body System.Soft_Links.Tasking is
 --         Abort_Undefer.all;
 --      end if;
 --   end Timed_Delay_T;
---
---   --------------------------------
---   -- Task_Termination_Handler_T --
---   --------------------------------
---
---   procedure Task_Termination_Handler_T (Excep : SSL.EO) is
+
+   --------------------------------
+   -- Task_Termination_Handler_T --
+   --------------------------------
+
+   procedure Task_Termination_Handler_T (Excep : SSL.EO) is
 --      Self_Id : constant System.Tasking.Task_Id := STPO.Self;
 --      Cause   : System.Tasking.Cause_Of_Termination;
 --      EO      : Ada.Exceptions.Exception_Occurrence;
---
---   begin
+
+   begin
+      raise Program_Error;
       --  We can only be here because we are terminating the environment task.
       --  Task termination for all other tasks is handled in the Task_Wrapper.
 
@@ -197,7 +198,7 @@ package body System.Soft_Links.Tasking is
 --               null;
 --         end;
 --      end if;
---   end Task_Termination_Handler_T;
+   end Task_Termination_Handler_T;
 
    -----------------------------
    -- Init_Tasking_Soft_Links --
@@ -218,18 +219,17 @@ package body System.Soft_Links.Tasking is
 
 --         SSL.Get_Jmpbuf_Address       := Get_Jmpbuf_Address'Access;
 --         SSL.Set_Jmpbuf_Address       := Set_Jmpbuf_Address'Access;
---         SSL.Get_Sec_Stack            := Get_Sec_Stack'Access;
+         SSL.Get_Sec_Stack            := Get_Sec_Stack'Access;
 --         SSL.Get_Stack_Info           := Get_Stack_Info'Access;
 --         SSL.Set_Sec_Stack            := Set_Sec_Stack'Access;
 --         SSL.Timed_Delay              := Timed_Delay_T'Access;
---         SSL.Task_Termination_Handler := Task_Termination_Handler_T'Access;
+         SSL.Task_Termination_Handler := Task_Termination_Handler_T'Access;
 
          --  No need to create a new secondary stack, since we will use the
          --  default one created in s-secsta.adb.
 
---         SSL.Set_Sec_Stack          (SSL.Get_Sec_Stack_NT);
---         SSL.Set_Jmpbuf_Address     (SSL.Get_Jmpbuf_Address_NT);
-         raise Program_Error;
+         SSL.Set_Sec_Stack          (SSL.Get_Sec_Stack_NT);
+         SSL.Set_Jmpbuf_Address     (SSL.Get_Jmpbuf_Address_NT);
       end if;
 
       pragma Assert (Get_Sec_Stack /= null);

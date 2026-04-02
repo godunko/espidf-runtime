@@ -169,16 +169,16 @@ package body System.Soft_Links is
 --   begin
 --      return Ada.Exceptions.Exception_Identity (Get_Current_Excep.all.all);
 --   end Get_GNAT_Exception;
---
---   ---------------------------
---   -- Get_Jmpbuf_Address_NT --
---   ---------------------------
---
---   function Get_Jmpbuf_Address_NT return  Address is
---   begin
---      return NT_TSD.Jmpbuf_Address;
---   end Get_Jmpbuf_Address_NT;
---
+
+   ---------------------------
+   -- Get_Jmpbuf_Address_NT --
+   ---------------------------
+
+   function Get_Jmpbuf_Address_NT return  Address is
+   begin
+      return NT_TSD.Jmpbuf_Address;
+   end Get_Jmpbuf_Address_NT;
+
 --   -----------------------------
 --   -- Get_Jmpbuf_Address_Soft --
 --   -----------------------------
@@ -231,29 +231,29 @@ package body System.Soft_Links is
 --      end if;
    end Save_Library_Occurrence;
 
---   ---------------------------
---   -- Set_Jmpbuf_Address_NT --
---   ---------------------------
---
---   procedure Set_Jmpbuf_Address_NT (Addr : Address) is
---   begin
---      NT_TSD.Jmpbuf_Address := Addr;
---   end Set_Jmpbuf_Address_NT;
---
+   ---------------------------
+   -- Set_Jmpbuf_Address_NT --
+   ---------------------------
+
+   procedure Set_Jmpbuf_Address_NT (Addr : Address) is
+   begin
+      NT_TSD.Jmpbuf_Address := Addr;
+   end Set_Jmpbuf_Address_NT;
+
 --   procedure Set_Jmpbuf_Address_Soft (Addr : Address) is
 --   begin
 --      Set_Jmpbuf_Address (Addr);
 --   end Set_Jmpbuf_Address_Soft;
---
---   ----------------------
---   -- Set_Sec_Stack_NT --
---   ----------------------
---
---   procedure Set_Sec_Stack_NT (Stack : SST.SS_Stack_Ptr) is
---   begin
---      NT_TSD.Sec_Stack_Ptr := Stack;
---   end Set_Sec_Stack_NT;
---
+
+   ----------------------
+   -- Set_Sec_Stack_NT --
+   ----------------------
+
+   procedure Set_Sec_Stack_NT (Stack : SST.SS_Stack_Ptr) is
+   begin
+      NT_TSD.Sec_Stack_Ptr := Stack;
+   end Set_Sec_Stack_NT;
+
 --   ------------------------
 --   -- Set_Sec_Stack_Soft --
 --   ------------------------

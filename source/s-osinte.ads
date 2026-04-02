@@ -1,8 +1,16 @@
 
 with Interfaces;
 
+with System.FreeRTOS;
+
 package System.OS_Interface is
    pragma Preelaborate;
+
+   -------------
+   -- Threads --
+   -------------
+
+   subtype Thread_Id is System.FreeRTOS.TaskHandle_t;
 
    -------------------------------------------------------
    -- Declarations for Ada.Real_Time from `bb-runtimes` --

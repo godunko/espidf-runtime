@@ -34,15 +34,15 @@
 
 --  with System.OS_Interface;
 --  with System.Parameters;
---  with System.Tasking;
+with System.Tasking;
 
 package System.Task_Primitives.Operations is
    pragma Preelaborate;
 
 --   package OSI renames System.OS_Interface;
---   package ST  renames System.Tasking;
---
---   procedure Initialize (Environment_Task : ST.Task_Id);
+   package ST  renames System.Tasking;
+
+   procedure Initialize (Environment_Task : ST.Task_Id);
    --  Perform initialization and set up of the environment task for proper
    --  operation of the tasking run-time. This must be called once, before any
    --  other subprograms of this package are called.
@@ -132,10 +132,10 @@ package System.Task_Primitives.Operations is
 
    --  ??? modify GNARL to skip wakeup and always call Abort_Task
 
---   function Self return ST.Task_Id;
---   pragma Inline (Self);
---   --  Return a pointer to the Ada Task Control Block of the calling task
---
+   function Self return ST.Task_Id;
+   pragma Inline (Self);
+   --  Return a pointer to the Ada Task Control Block of the calling task
+
 --   type Lock_Level is
 --     (PO_Level,
 --      Global_Task_Level,
@@ -407,14 +407,14 @@ package System.Task_Primitives.Operations is
 --
 --   function Get_Thread_Id (T : ST.Task_Id) return OSI.Thread_Id;
 --   --  Return the thread id of the specified task
---
---   function Is_Valid_Task return Boolean;
---   pragma Inline (Is_Valid_Task);
---   --  Does the calling thread have an ATCB?
---
---   function Register_Foreign_Thread return ST.Task_Id;
---   --  Allocate and initialize a new ATCB for the current thread
---
+
+   function Is_Valid_Task return Boolean;
+   pragma Inline (Is_Valid_Task);
+   --  Does the calling thread have an ATCB?
+
+   function Register_Foreign_Thread return ST.Task_Id;
+   --  Allocate and initialize a new ATCB for the current thread
+
 --   -----------------------
 --   -- RTS Entrance/Exit --
 --   -----------------------

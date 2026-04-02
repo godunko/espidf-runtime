@@ -39,7 +39,7 @@
 
 --  with System.Multiprocessors;
 --  with System.Parameters;
---  with System.Soft_Links;
+with System.Soft_Links;
 --  with System.Stack_Usage;
 --  with System.Task_Info;
 with System.Task_Primitives;
@@ -493,13 +493,13 @@ package System.Tasking is
    --  Currently gdb relies on the order of the State, Parent, Base_Priority,
    --  Task_Image, Task_Image_Len, Call and LL fields.
 
---   -------------------------
---   -- Common ATCB section --
---   -------------------------
---
---   --  Section used by all GNARL implementations (regular and restricted)
---
---   type Common_ATCB is limited record
+   -------------------------
+   -- Common ATCB section --
+   -------------------------
+
+   --  Section used by all GNARL implementations (regular and restricted)
+
+   type Common_ATCB is limited record
 --      State : Task_States;
 --      pragma Atomic (State);
 --      --  Encodes some basic information about the state of a task,
@@ -606,13 +606,13 @@ package System.Tasking is
 --      --  Protection: Part of the synchronization between Self and Activator.
 --      --  Activator writes it, once, before Self starts executing. Self reads
 --      --  it, once, as part of its execution.
---
---      Compiler_Data : System.Soft_Links.TSD;
---      --  Task-specific data needed by the compiler to store per-task
---      --  structures.
---      --
---      --  Protection: Only accessed by Self
---
+
+      Compiler_Data : System.Soft_Links.TSD;
+      --  Task-specific data needed by the compiler to store per-task
+      --  structures.
+      --
+      --  Protection: Only accessed by Self
+
 --      All_Tasks_Link : Task_Id;
 --      --  Used to link this task to the list of all tasks in the system
 --      --
@@ -714,8 +714,8 @@ package System.Tasking is
       --  need to do different things depending on the situation.
       --
       --  Protection: Self.L
---   end record;
---
+   end record;
+
 --   ---------------------------------------
 --   -- Restricted_Ada_Task_Control_Block --
 --   ---------------------------------------
@@ -985,9 +985,9 @@ package System.Tasking is
    --  a target configuration file forces the maximum integer size to 32.
 
    type Ada_Task_Control_Block (Entry_Num : Task_Entry_Index) is limited record
---      Common : Common_ATCB;
---      --  The common part between various tasking implementations
---
+      Common : Common_ATCB;
+      --  The common part between various tasking implementations
+
 --      Entry_Calls : Entry_Call_Array;
       --  An array of entry calls
       --
@@ -1178,7 +1178,6 @@ package System.Tasking is
       --
       --  Protection: Self.L. Once a task has set Self.Stage to Completing, it
       --  has exclusive access to this field.
-      null;
    end record; -- Ada_Task_Control_Block
 
    --------------------

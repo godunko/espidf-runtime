@@ -93,9 +93,9 @@ package System.Soft_Links is
 
    type Get_Stack_Call    is access function return SST.SS_Stack_Ptr;
    pragma Favor_Top_Level (Get_Stack_Call);
---   type Set_Stack_Call    is access procedure (Stack : SST.SS_Stack_Ptr);
---   pragma Favor_Top_Level (Set_Stack_Call);
---
+   type Set_Stack_Call    is access procedure (Stack : SST.SS_Stack_Ptr);
+   pragma Favor_Top_Level (Set_Stack_Call);
+
 --   type Special_EO_Call   is access
 --     procedure (Excep : EO := Current_Target_Exception);
 --   pragma Favor_Top_Level (Special_EO_Call);
@@ -126,7 +126,7 @@ package System.Soft_Links is
    pragma Suppress (Access_Check, Get_EOA_Call);
 --   pragma Suppress (Access_Check, Set_EOA_Call);
    pragma Suppress (Access_Check, Get_Stack_Call);
---   pragma Suppress (Access_Check, Set_Stack_Call);
+   pragma Suppress (Access_Check, Set_Stack_Call);
 --   pragma Suppress (Access_Check, Timed_Delay_Call);
 --   pragma Suppress (Access_Check, Get_Stack_Access_Call);
 --   pragma Suppress (Access_Check, Task_Name_Call);
@@ -231,17 +231,17 @@ package System.Soft_Links is
    Adafinal : No_Param_Proc := Adafinal_NT'Access;
    --  Performs the finalization of the Ada Runtime
 
---   function  Get_Jmpbuf_Address_NT return  Address;
---   procedure Set_Jmpbuf_Address_NT (Addr : Address);
---
+   function  Get_Jmpbuf_Address_NT return  Address;
+   procedure Set_Jmpbuf_Address_NT (Addr : Address);
+
 --   Get_Jmpbuf_Address : Get_Address_Call := Get_Jmpbuf_Address_NT'Access;
---   Set_Jmpbuf_Address : Set_Address_Call := Set_Jmpbuf_Address_NT'Access;
+   Set_Jmpbuf_Address : Set_Address_Call := Set_Jmpbuf_Address_NT'Access;
 
    function  Get_Sec_Stack_NT return  SST.SS_Stack_Ptr;
---   procedure Set_Sec_Stack_NT (Stack : SST.SS_Stack_Ptr);
---
+   procedure Set_Sec_Stack_NT (Stack : SST.SS_Stack_Ptr);
+
    Get_Sec_Stack : Get_Stack_Call := Get_Sec_Stack_NT'Access;
---   Set_Sec_Stack : Set_Stack_Call := Set_Sec_Stack_NT'Access;
+   Set_Sec_Stack : Set_Stack_Call := Set_Sec_Stack_NT'Access;
 
    function Get_Current_Excep_NT return EOA;
 
