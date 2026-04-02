@@ -39,13 +39,13 @@
 
 with Ada.Exceptions;
 --  with System.Parameters;
---  with System.Secondary_Stack;
+with System.Secondary_Stack;
 --  with System.Stack_Checking;
 
 package System.Soft_Links is
    pragma Preelaborate;
 
---   package SST renames System.Secondary_Stack;
+   package SST renames System.Secondary_Stack;
 
    subtype EOA is Ada.Exceptions.Exception_Occurrence_Access;
    subtype EO is Ada.Exceptions.Exception_Occurrence;
@@ -90,9 +90,9 @@ package System.Soft_Links is
 --   pragma Favor_Top_Level (Set_EOA_Call);
 --   type Set_EO_Call       is access procedure (Excep : EO);
 --   pragma Favor_Top_Level (Set_EO_Call);
---
---   type Get_Stack_Call    is access function return SST.SS_Stack_Ptr;
---   pragma Favor_Top_Level (Get_Stack_Call);
+
+   type Get_Stack_Call    is access function return SST.SS_Stack_Ptr;
+   pragma Favor_Top_Level (Get_Stack_Call);
 --   type Set_Stack_Call    is access procedure (Stack : SST.SS_Stack_Ptr);
 --   pragma Favor_Top_Level (Set_Stack_Call);
 --
@@ -125,7 +125,7 @@ package System.Soft_Links is
 --   pragma Suppress (Access_Check, Set_Integer_Call);
    pragma Suppress (Access_Check, Get_EOA_Call);
 --   pragma Suppress (Access_Check, Set_EOA_Call);
---   pragma Suppress (Access_Check, Get_Stack_Call);
+   pragma Suppress (Access_Check, Get_Stack_Call);
 --   pragma Suppress (Access_Check, Set_Stack_Call);
 --   pragma Suppress (Access_Check, Timed_Delay_Call);
 --   pragma Suppress (Access_Check, Get_Stack_Access_Call);
@@ -236,11 +236,11 @@ package System.Soft_Links is
 --
 --   Get_Jmpbuf_Address : Get_Address_Call := Get_Jmpbuf_Address_NT'Access;
 --   Set_Jmpbuf_Address : Set_Address_Call := Set_Jmpbuf_Address_NT'Access;
---
---   function  Get_Sec_Stack_NT return  SST.SS_Stack_Ptr;
+
+   function  Get_Sec_Stack_NT return  SST.SS_Stack_Ptr;
 --   procedure Set_Sec_Stack_NT (Stack : SST.SS_Stack_Ptr);
 --
---   Get_Sec_Stack : Get_Stack_Call := Get_Sec_Stack_NT'Access;
+   Get_Sec_Stack : Get_Stack_Call := Get_Sec_Stack_NT'Access;
 --   Set_Sec_Stack : Set_Stack_Call := Set_Sec_Stack_NT'Access;
 
    function Get_Current_Excep_NT return EOA;
@@ -352,8 +352,8 @@ package System.Soft_Links is
       --  threaded into a stack, and the address here is the top of the stack.
       --  A null address means that no exception handler is currently active.
 
---      Sec_Stack_Ptr : SST.SS_Stack_Ptr;
---      --  Pointer of the allocated secondary stack
+      Sec_Stack_Ptr : SST.SS_Stack_Ptr;
+      --  Pointer of the allocated secondary stack
 
       Current_Excep : aliased EO;
       --  Exception occurrence that contains the information for the current

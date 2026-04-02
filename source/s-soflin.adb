@@ -187,16 +187,16 @@ package body System.Soft_Links is
 --   begin
 --      return Get_Jmpbuf_Address.all;
 --   end Get_Jmpbuf_Address_Soft;
---
---   ----------------------
---   -- Get_Sec_Stack_NT --
---   ----------------------
---
---   function Get_Sec_Stack_NT return SST.SS_Stack_Ptr is
---   begin
---      return NT_TSD.Sec_Stack_Ptr;
---   end Get_Sec_Stack_NT;
---
+
+   ----------------------
+   -- Get_Sec_Stack_NT --
+   ----------------------
+
+   function Get_Sec_Stack_NT return SST.SS_Stack_Ptr is
+   begin
+      return NT_TSD.Sec_Stack_Ptr;
+   end Get_Sec_Stack_NT;
+
 --   -----------------------------
 --   -- Get_Sec_Stack_Soft --
 --   -----------------------------
