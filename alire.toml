@@ -18,6 +18,7 @@ generate_gpr = false
 
 [environment]
 A0B_TOOLS_SVD.set = "${CRATE_ROOT}/svd/esp32s3.svd"
+A0B_TOOLS_RUNTIME_DESCRIPTION.set = "${CRATE_ROOT}/runtime-esp32s3.json"
 
 [[depends-on]]
 a0b_tools = "*"
