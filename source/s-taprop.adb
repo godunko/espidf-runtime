@@ -12,6 +12,7 @@ package body System.Task_Primitives.Operations is
 
    use System.FreeRTOS;
    use System.OS_Interface;
+   use System.OS_Locks;
    use System.Parameters;
    use System.Tasking;
 
@@ -27,6 +28,11 @@ package body System.Task_Primitives.Operations is
 
    Foreign_Task_Elaborated : aliased Boolean := True;
    --  Used to identified fake tasks (i.e., non-Ada Threads)
+
+   Single_RTS_Lock : aliased RTS_Lock;
+   --  This is a lock to allow only one thread of control in the RTS at a
+   --  time; it is used to execute in mutual exclusion from all other tasks.
+   --  Used to protect All_Tasks_List
 
    --------------------
    -- Local Packages --
@@ -112,23 +118,23 @@ package body System.Task_Primitives.Operations is
       --  end if;
    end Initialize_TCB;
 
-   --  --------------
-   --  -- Lock_RTS --
-   --  --------------
-   --
-   --  procedure Lock_RTS is
-   --  begin
-   --     Write_Lock (Single_RTS_Lock'Access);
-   --  end Lock_RTS;
-   --
-   --  ----------------
-   --  -- Unlock_RTS --
-   --  ----------------
-   --
-   --  procedure Unlock_RTS is
-   --  begin
-   --     Unlock (Single_RTS_Lock'Access);
-   --  end Unlock_RTS;
+   --------------
+   -- Lock_RTS --
+   --------------
+
+   procedure Lock_RTS is
+   begin
+      Write_Lock (Single_RTS_Lock'Access);
+   end Lock_RTS;
+
+   ----------------
+   -- Unlock_RTS --
+   ----------------
+
+   procedure Unlock_RTS is
+   begin
+      Unlock (Single_RTS_Lock'Access);
+   end Unlock_RTS;
 
    ----------------
    -- Initialize --
@@ -174,13 +180,11 @@ package body System.Task_Primitives.Operations is
       --        pragma Assert (Result = 0);
       --     end if;
       --  end loop;
-      --
-      --  --  Initialize the lock used to synchronize chain of all ATCBs
-      --
-      --  Initialize_Lock (Single_RTS_Lock'Access, RTS_Lock_Level);
-      --
-      --  Specific.Initialize (Environment_Task);
-      --
+
+      --  Initialize the lock used to synchronize chain of all ATCBs
+
+      Initialize_Lock (Single_RTS_Lock'Access, RTS_Lock_Level);
+
       --  if Use_Alternate_Stack then
       --     Environment_Task.Common.Task_Alternate_Stack :=
       --       Alternate_Stack'Address;
@@ -191,9 +195,9 @@ package body System.Task_Primitives.Operations is
       --
       --  Known_Tasks (Known_Tasks'First) := Environment_Task;
       --  Environment_Task.Known_Tasks_Index := Known_Tasks'First;
-      --
-      --  Enter_Task (Environment_Task);
-      --
+
+      Enter_Task (Environment_Task);
+
       --  if State
       --      (System.Interrupt_Management.Abort_Task_Interrupt) /= Default
       --  then
@@ -213,6 +217,52 @@ package body System.Task_Primitives.Operations is
       --     Abort_Handler_Installed := True;
       --  end if;
    end Initialize;
+
+   ---------------------
+   -- Initialize_Lock --
+   ---------------------
+
+   procedure Initialize_Lock
+     (L     : not null access RTS_Lock;
+      Level : Lock_Level)
+   is
+      pragma Unreferenced (Level);
+
+      Success : BaseType_t;
+
+   begin
+      L.Mutex := xSemaphoreCreateBinary;
+      --  L.Prio_Ceiling := int (System.Any_Priority'Last);
+      pragma Assert (L.Mutex /= Null_SemaphoreHandle_t);
+
+      Success := xSemaphoreGive (L.Mutex);
+      --  Binary semaphore (opposite to mutex) is in "unavailable" state after
+      --  creation and must be "given" first.
+
+      pragma Assert (Success = pdTRUE);
+   end Initialize_Lock;
+
+   ----------------
+   -- Write_Lock --
+   ----------------
+
+   procedure Write_Lock (L : not null access RTS_Lock) is
+      Result : BaseType_t;
+   begin
+      Result := xSemaphoreTake (L.Mutex, portMAX_DELAY);
+      pragma Assert (Result = pdTRUE);
+   end Write_Lock;
+
+   ------------
+   -- Unlock --
+   ------------
+
+   procedure Unlock (L : not null access RTS_Lock) is
+      Result : BaseType_t;
+   begin
+      Result := xSemaphoreGive (L.Mutex);
+      pragma Assert (Result = pdTRUE);
+   end Unlock;
 
    ----------------
    -- Enter_Task --

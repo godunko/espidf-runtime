@@ -44,6 +44,7 @@
       "s-multip.adb": { "crate": "espidf_runtime", "path": "source/s-multip.adb" },
       "s-multip.ads": { "crate": "espidf_runtime", "path": "source/s-multip.ads" },
       "s-osinte.ads": { "crate": "espidf_runtime", "path": "source/s-osinte.ads" },
+      "s-oslock.ads": { "crate": "espidf_runtime", "path": "source/s-oslock.ads" },
       "s-parame.adb": { },
       "s-parame.ads": { "crate": "espidf_runtime", "path": "source/s-parame.ads" },
       "s-secsta.adb": { "crate": "espidf_runtime", "path": "source/gcc-15/libgnat/s-secsta.adb" },
@@ -67,6 +68,7 @@
       "s-tporft.adb": { "crate": "espidf_runtime", "path": "source/s-tporft.adb" },
       "s-traceb.adb": { "crate": "espidf_runtime", "path": "source/s-traceb.adb" },
       "s-traceb.ads": { "crate": "espidf_runtime", "path": "source/gcc-15/libgnat/s-traceb.ads" },
+      "freertos.c": { "crate": "espidf_runtime", "path": "source/freertos.c" },
 
 ////      "raise-gcc.c": { "crate": "bb_runtimes", "path": "gnat_rts_sources/include/rts-sources/full/raise-gcc.c" },
 ////      "unwind-pe.h": { "crate": "bb_runtimes", "path": "gnat_rts_sources/include/rts-sources/full/gcc/unwind-pe.h" },

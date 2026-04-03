@@ -33,6 +33,7 @@
 --  the underlying OS.
 
 --  with System.OS_Interface;
+with System.OS_Locks;
 --  with System.Parameters;
 with System.Tasking;
 
@@ -136,22 +137,22 @@ package System.Task_Primitives.Operations is
    pragma Inline (Self);
    --  Return a pointer to the Ada Task Control Block of the calling task
 
---   type Lock_Level is
---     (PO_Level,
---      Global_Task_Level,
---      RTS_Lock_Level,
---      ATCB_Level);
---   --  Type used to describe kind of lock for second form of Initialize_Lock
---   --  call specified below. See locking rules in System.Tasking (spec) for
---   --  more details.
---
+   type Lock_Level is
+     (PO_Level,
+      Global_Task_Level,
+      RTS_Lock_Level,
+      ATCB_Level);
+   --  Type used to describe kind of lock for second form of Initialize_Lock
+   --  call specified below. See locking rules in System.Tasking (spec) for
+   --  more details.
+
 --   procedure Initialize_Lock
 --     (Prio : System.Any_Priority;
 --      L    : not null access Lock);
---   procedure Initialize_Lock
---     (L     : not null access System.OS_Locks.RTS_Lock;
---      Level : Lock_Level);
---   pragma Inline (Initialize_Lock);
+   procedure Initialize_Lock
+     (L     : not null access System.OS_Locks.RTS_Lock;
+      Level : Lock_Level);
+   pragma Inline (Initialize_Lock);
    --  Initialize a lock object
    --
    --  For Lock, Prio is the ceiling priority associated with the lock. For
@@ -177,32 +178,32 @@ package System.Task_Primitives.Operations is
 --   pragma Inline (Finalize_Lock);
 --   --  Finalize a lock object, freeing any resources allocated by the
 --   --  corresponding Initialize_Lock operation.
---
+
 --   procedure Write_Lock
 --     (L                 : not null access Lock;
 --      Ceiling_Violation : out Boolean);
---   procedure Write_Lock (L : not null access System.OS_Locks.RTS_Lock);
+   procedure Write_Lock (L : not null access System.OS_Locks.RTS_Lock);
 --   procedure Write_Lock (T : ST.Task_Id);
---   pragma Inline (Write_Lock);
---   --  Lock a lock object for write access. After this operation returns,
---   --  the calling task holds write permission for the lock object. No other
---   --  Write_Lock or Read_Lock operation on the same lock object will return
---   --  until this task executes an Unlock operation on the same object. The
---   --  effect is undefined if the calling task already holds read or write
---   --  permission for the lock object L.
---   --
---   --  For the operation on Lock, Ceiling_Violation is set to true iff the
---   --  operation failed, which will happen if there is a priority ceiling
---   --  violation.
---   --
---   --  For the operation on ST.Task_Id, the lock is the special lock object
---   --  associated with that task's ATCB. This lock has effective ceiling
---   --  priority high enough that it is safe to call by a task with any
---   --  priority in the range System.Priority. It is implicitly initialized
---   --  by task creation. The effect is undefined if the calling task already
---   --  holds T's lock, or has interrupt-level priority. Finalization of the
---   --  per-task lock is implicit in Exit_Task.
---
+   pragma Inline (Write_Lock);
+   --  Lock a lock object for write access. After this operation returns,
+   --  the calling task holds write permission for the lock object. No other
+   --  Write_Lock or Read_Lock operation on the same lock object will return
+   --  until this task executes an Unlock operation on the same object. The
+   --  effect is undefined if the calling task already holds read or write
+   --  permission for the lock object L.
+   --
+   --  For the operation on Lock, Ceiling_Violation is set to true iff the
+   --  operation failed, which will happen if there is a priority ceiling
+   --  violation.
+   --
+   --  For the operation on ST.Task_Id, the lock is the special lock object
+   --  associated with that task's ATCB. This lock has effective ceiling
+   --  priority high enough that it is safe to call by a task with any
+   --  priority in the range System.Priority. It is implicitly initialized
+   --  by task creation. The effect is undefined if the calling task already
+   --  holds T's lock, or has interrupt-level priority. Finalization of the
+   --  per-task lock is implicit in Exit_Task.
+
 --   procedure Read_Lock
 --     (L                 : not null access Lock;
 --      Ceiling_Violation : out Boolean);
@@ -229,9 +230,9 @@ package System.Task_Primitives.Operations is
 
 --   procedure Unlock
 --     (L : not null access Lock);
---   procedure Unlock (L : not null access System.OS_Locks.RTS_Lock);
+   procedure Unlock (L : not null access System.OS_Locks.RTS_Lock);
 --   procedure Unlock (T : ST.Task_Id);
---   pragma Inline (Unlock);
+   pragma Inline (Unlock);
    --  Unlock a locked lock object
    --
    --  The effect is undefined unless the calling task holds read or write
@@ -425,11 +426,11 @@ package System.Task_Primitives.Operations is
    --
    --  These routines also replace the functions Lock/Unlock_All_Tasks_List
 
---   procedure Lock_RTS;
---   --  Take the global RTS lock
---
---   procedure Unlock_RTS;
---   --  Release the global RTS lock
+   procedure Lock_RTS;
+   --  Take the global RTS lock
+
+   procedure Unlock_RTS;
+   --  Release the global RTS lock
 
 --   --------------------
 --   -- Stack Checking --
