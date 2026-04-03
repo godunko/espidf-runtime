@@ -387,7 +387,7 @@ package System.Tasking is
 
    type Dispatching_Domain_Access is access Dispatching_Domain;
 
---   System_Domain : Dispatching_Domain_Access;
+   System_Domain : Dispatching_Domain_Access;
    --  All processors belong to default system dispatching domain at start up.
    --  We use a pointer which creates the actual variable for the reasons
    --  explained bellow in Dispatching_Domain_Tasks.
@@ -533,8 +533,8 @@ package System.Tasking is
 --      --  Base CPU, only changed via dispatching domains package.
 --      --
 --      --  Protection: Self.L
---
---      Current_Priority : System.Any_Priority;
+
+      Current_Priority : System.Any_Priority;
       --  Active priority, except that the effects of protected object
       --  priority ceilings are not reflected. This only reflects explicit
       --  priority changes and priority inherited through task activation
@@ -578,14 +578,14 @@ package System.Tasking is
 --      --  is False, and will not need the mutex to do so. Once a task sets
 --      --  Pending_ATC_Level = Level_Completed_Task, no other task can access
 --      --  this field.
---
---      LL : aliased Task_Primitives.Private_Data;
---      --  Control block used by the underlying low-level tasking service
---      --  (GNULLI).
---      --
---      --  Protection: This is used only by the GNULLI implementation, which
---      --  takes care of all of its synchronization.
---
+
+      LL : aliased Task_Primitives.Private_Data;
+      --  Control block used by the underlying low-level tasking service
+      --  (GNULLI).
+      --
+      --  Protection: This is used only by the GNULLI implementation, which
+      --  takes care of all of its synchronization.
+
 --      Task_Arg : System.Address;
       --  The argument to task procedure. Provide a handle for discriminant
       --  information.
@@ -779,12 +779,12 @@ package System.Tasking is
 --   --  Note that the value of Library_Task_Level is also hard coded in the
 --   --  compiler, see Rtsfind.Library_Task_Level. The two should be kept in
 --   --  sync.
---
---   -------------------
---   -- Priority info --
---   -------------------
---
---   Unspecified_Priority : constant Integer := -1;
+
+   -------------------
+   -- Priority info --
+   -------------------
+
+   Unspecified_Priority : constant Integer := -1;
    --  Indicates that a task has an unspecified priority. This is hardcoded as
    --  -1 rather than System.Priority'First - 1 as the value needs to be used
    --  in init.c to specify that the main task has no specified priority.
@@ -794,14 +794,14 @@ package System.Tasking is
 --
 --   subtype Rendezvous_Priority is Integer
 --     range Priority_Not_Boosted .. System.Any_Priority'Last;
---
---   -------------------
---   -- Affinity info --
---   -------------------
---
---   Unspecified_CPU : constant := -1;
---   --  No affinity specified
---
+
+   -------------------
+   -- Affinity info --
+   -------------------
+
+   Unspecified_CPU : constant := -1;
+   --  No affinity specified
+
 --   ------------------------------------
 --   -- Rendezvous related definitions --
 --   ------------------------------------

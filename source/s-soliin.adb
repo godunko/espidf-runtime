@@ -33,6 +33,7 @@
 
 with System.Secondary_Stack;
 with System.Soft_Links.Tasking;
+with System.Tasking;
 
 package body System.Soft_Links.Initialize is
 
@@ -50,5 +51,6 @@ begin
 
    --  Set task-safe version of soft links, to support foreign threads.
 
+   System.Tasking.Initialize;
    System.Soft_Links.Tasking.Init_Tasking_Soft_Links;
 end System.Soft_Links.Initialize;

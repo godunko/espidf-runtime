@@ -12,6 +12,8 @@ package System.OS_Interface is
 
    subtype Thread_Id is System.FreeRTOS.TaskHandle_t;
 
+   Null_Thread_Id : constant Thread_Id := System.FreeRTOS.Null_TaskHandle_t;
+
    -------------------------------------------------------
    -- Declarations for Ada.Real_Time from `bb-runtimes` --
    -------------------------------------------------------

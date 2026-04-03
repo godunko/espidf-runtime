@@ -51,8 +51,8 @@ begin
 
    --  Record this as the Task_Id for the thread
 
---   Local_ATCB.Common.LL.Thread := Thread;
---   Local_ATCB.Common.Current_Priority := System.Priority'First;
+   Local_ATCB.Common.LL.Thread := Thread;
+   Local_ATCB.Common.Current_Priority := System.Priority'First;
 --   Local_ATCB.Common.Global_Task_Lock_Nesting := 0;
    Specific.Set (Local_ATCB'Unchecked_Access);
 
@@ -98,7 +98,7 @@ begin
    System.Soft_Links.Create_TSD
      (Self_Id.Common.Compiler_Data, null, Sec_Stack_Size);
 
---   Self_Id.Common.LL.Thread := Thread;
+   Self_Id.Common.LL.Thread := Thread;
    Enter_Task (Self_Id);
 
    return Self_Id;

@@ -1,4 +1,4 @@
---
+
 --  This is the FreeRTOS version of this package
 
 --  This package contains all the GNULL primitives that interface directly with
@@ -56,6 +56,13 @@ package body System.Task_Primitives.Operations is
    package body Specific is separate;
    --  The body of this package is target specific
 
+   ----------------------------------
+   -- ATCB allocation/deallocation --
+   ----------------------------------
+
+   package body ATCB_Allocation is separate;
+   --  The body of this package is shared across several targets
+
    ---------------------------------
    -- Support for foreign threads --
    ---------------------------------
@@ -93,15 +100,14 @@ package body System.Task_Primitives.Operations is
 
    procedure Initialize_TCB (Self_ID : Task_Id; Succeeded : out Boolean) is
    begin
-      null;
+      Self_ID.Common.LL.Thread := Null_Thread_Id;
       --  Self_ID.Common.LL.CV := semBCreate (SEM_Q_PRIORITY, SEM_EMPTY);
-      --  Self_ID.Common.LL.Thread := Null_Thread_Id;
-      --
+
       --  if Self_ID.Common.LL.CV = 0 then
       --     Succeeded := False;
       --
       --  else
-      --     Succeeded := True;
+         Succeeded := True;
       --     Initialize_Lock (Self_ID.Common.LL.L'Access, ATCB_Level);
       --  end if;
    end Initialize_TCB;
@@ -153,8 +159,8 @@ package body System.Task_Primitives.Operations is
 
       Specific.Initialize (Environment_Task);
 
-      --  Environment_Task.Common.LL.Thread := pthread_self;
-      --
+      Environment_Task.Common.LL.Thread := xTaskGetCurrentTaskHandle;
+
       --  Interrupt_Management.Initialize;
       --
       --  --  Prepare the set of signals that should unblocked in all tasks
@@ -217,7 +223,7 @@ package body System.Task_Primitives.Operations is
 --      --  Store the user-level task id in the Thread field (to be used
 --      --  internally by the run-time system) and the kernel-level task id in
 --      --  the LWP field (to be used by the debugger).
---
+
 --      Self_ID.Common.LL.Thread := taskIdSelf;
 --      Self_ID.Common.LL.LWP := getpid;
 

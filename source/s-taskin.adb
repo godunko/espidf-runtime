@@ -127,8 +127,8 @@ package body System.Tasking is
 --         T.Common.Domain := System_Domain;
 --      end if;
 --      pragma Assert (T.Common.Domain /= null);
---
---      T.Common.Current_Priority         := Priority'First;
+
+      T.Common.Current_Priority         := Priority'First;
 --      T.Common.Protected_Action_Nesting := 0;
 --      T.Common.Call                     := null;
 --      T.Common.Task_Arg                 := Task_Arg;
@@ -173,28 +173,28 @@ package body System.Tasking is
 
 --   Main_Task_Image : constant String := "main_task";
 --   --  Image of environment task
---
---   Main_Priority : constant Integer;
---   pragma Import (C, Main_Priority, "__gl_main_priority");
+
+   Main_Priority : constant Integer;
+   pragma Import (C, Main_Priority, "__gl_main_priority");
    --  Priority for main task. Note that this is of type Integer, not Priority,
    --  because we use the value -1 to indicate the default main priority, and
    --  that is of course not in Priority'range.
 
---   Main_CPU : constant Integer;
---   pragma Import (C, Main_CPU, "__gl_main_cpu");
---   --  Affinity for main task. Note that this is of type Integer, not
---   --  CPU_Range, because we use the value -1 to indicate the unassigned
---   --  affinity, and that is of course not in CPU_Range'Range.
+   Main_CPU : constant Integer;
+   pragma Import (C, Main_CPU, "__gl_main_cpu");
+   --  Affinity for main task. Note that this is of type Integer, not
+   --  CPU_Range, because we use the value -1 to indicate the unassigned
+   --  affinity, and that is of course not in CPU_Range'Range.
 
    Initialized : Boolean := False;
    --  Used to prevent multiple calls to Initialize
 
    procedure Initialize is
---      T             : Task_Id;
---      Base_Priority : Any_Priority;
---      Base_CPU      : System.Multiprocessors.CPU_Range;
---      Success       : Boolean;
---
+      T             : Task_Id;
+      Base_Priority : Any_Priority;
+      Base_CPU      : System.Multiprocessors.CPU_Range;
+      Success       : Boolean;
+
 --      use type System.Multiprocessors.CPU_Range;
 
    begin
@@ -204,18 +204,17 @@ package body System.Tasking is
 
       Initialized := True;
 
-      raise Program_Error;
---      --  Initialize Environment Task
---
---      Base_Priority :=
---        (if Main_Priority = Unspecified_Priority
---         then Default_Priority
---         else Priority (Main_Priority));
---
---      Base_CPU :=
---        (if Main_CPU = Unspecified_CPU
---         then System.Multiprocessors.Not_A_Specific_CPU
---         else System.Multiprocessors.CPU_Range (Main_CPU));
+      --  Initialize Environment Task
+
+      Base_Priority :=
+        (if Main_Priority = Unspecified_Priority
+         then Default_Priority
+         else Priority (Main_Priority));
+
+      Base_CPU :=
+        (if Main_CPU = Unspecified_CPU
+         then System.Multiprocessors.Not_A_Specific_CPU
+         else System.Multiprocessors.CPU_Range (Main_CPU));
 
       --  At program start-up the environment task is allocated to the default
       --  system dispatching domain.
@@ -223,29 +222,29 @@ package body System.Tasking is
       --  into account. Use Number_Of_CPUs to know the exact number of
       --  processors in the system at execution time.
 
---      System_Domain :=
---        new Dispatching_Domain'
---          (Multiprocessors.CPU'First .. Multiprocessors.Number_Of_CPUs =>
---             True);
---
---      T := STPO.New_ATCB (0);
---      Initialize_ATCB
---        (Self_ID          => null,
---         Task_Entry_Point => null,
---         Task_Arg         => Null_Address,
---         Parent           => Null_Task,
---         Elaborated       => null,
---         Base_Priority    => Base_Priority,
---         Base_CPU         => Base_CPU,
---         CPU_Is_Explicit  => Main_CPU /= Unspecified_CPU,
---         Domain           => System_Domain,
---         Task_Info        => Task_Info.Unspecified_Task_Info,
---         Stack_Size       => 0,
---         T                => T,
---         Success          => Success);
---      pragma Assert (Success);
---
---      STPO.Initialize (T);
+      System_Domain :=
+        new Dispatching_Domain'
+          (Multiprocessors.CPU'First .. Multiprocessors.Number_Of_CPUs =>
+             True);
+
+      T := STPO.New_ATCB (0);
+      Initialize_ATCB
+        (Self_ID          => null,
+         Task_Entry_Point => null,
+         Task_Arg         => Null_Address,
+         Parent           => Null_Task,
+         Elaborated       => null,
+         Base_Priority    => Base_Priority,
+         Base_CPU         => Base_CPU,
+         CPU_Is_Explicit  => Main_CPU /= Unspecified_CPU,
+         Domain           => System_Domain,
+         Task_Info        => Task_Info.Unspecified_Task_Info,
+         Stack_Size       => 0,
+         T                => T,
+         Success          => Success);
+      pragma Assert (Success);
+
+      STPO.Initialize (T);
 --      STPO.Set_Priority (T, T.Common.Base_Priority);
 --      T.Common.State := Runnable;
 --      T.Common.Task_Image_Len := Main_Task_Image'Length;
@@ -272,6 +271,6 @@ package body System.Tasking is
 --
 --      T.Entry_Calls (T.Entry_Calls'First).Self := T;
 --      T.Entry_Calls (T.Entry_Calls'First).Level := T.Entry_Calls'First;
---
+
    end Initialize;
 end System.Tasking;
