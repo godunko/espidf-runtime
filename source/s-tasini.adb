@@ -51,8 +51,8 @@ package body System.Tasking.Initialization is
 
    package SOL  renames System.OS_Locks;
    package SSL  renames System.Soft_Links;
---   package STPO renames System.Task_Primitives.Operations;
---
+   package STPO renames System.Task_Primitives.Operations;
+
 --   use Parameters;
    use Task_Primitives.Operations;
 
@@ -83,10 +83,10 @@ package body System.Tasking.Initialization is
 --   --  Releases lock previously set by call to Task_Lock. In the nested case,
 --   --  all nested locks must be released before other tasks competing for the
 --   --  tasking lock are released.
---
---   function Get_Current_Excep return SSL.EOA;
---   --  Task-safe version of SSL.Get_Current_Excep
---
+
+   function Get_Current_Excep return SSL.EOA;
+   --  Task-safe version of SSL.Get_Current_Excep
+
 --   function Task_Name return String;
 --   --  Returns current task's name
 
@@ -231,15 +231,15 @@ package body System.Tasking.Initialization is
 --      Self_ID := STPO.Self;
 --      Self_ID.Deferral_Level := Self_ID.Deferral_Level + 1;
 --   end Abort_Defer;
---
---   -----------------------
---   -- Get_Current_Excep --
---   -----------------------
---
---   function Get_Current_Excep return SSL.EOA is
---   begin
---      return STPO.Self.Common.Compiler_Data.Current_Excep'Access;
---   end Get_Current_Excep;
+
+   -----------------------
+   -- Get_Current_Excep --
+   -----------------------
+
+   function Get_Current_Excep return SSL.EOA is
+   begin
+      return STPO.Self.Common.Compiler_Data.Current_Excep'Access;
+   end Get_Current_Excep;
 
    -------------------------
    -- Initialize_RTS_Lock --
@@ -423,10 +423,10 @@ package body System.Tasking.Initialization is
 --      SSL.Unlock_Task        := Task_Unlock'Access;
 --      SSL.Check_Abort_Status := Check_Abort_Status'Access;
 --      SSL.Task_Name          := Task_Name'Access;
---      SSL.Get_Current_Excep  := Get_Current_Excep'Access;
---
---      --  Initialize the tasking soft links (if not done yet) that are common
---      --  to the full and the restricted run times.
+      SSL.Get_Current_Excep  := Get_Current_Excep'Access;
+
+      --  Initialize the tasking soft links (if not done yet) that are common
+      --  to the full and the restricted run times.
 
       SSL.Tasking.Init_Tasking_Soft_Links;
 
