@@ -78,8 +78,8 @@ private
 --   Gl_Bind_Env_Addr : Address := Null_Address;
 --   pragma Export (C, Gl_Bind_Env_Addr, "__gl_bind_env_addr");
 
---   Gl_XDR_Stream : Integer := 0;
---   pragma Export (C, Gl_XDR_Stream, "__gl_xdr_stream");
+   Gl_XDR_Stream : Integer := 0;
+   pragma Export (C, Gl_XDR_Stream, "__gl_xdr_stream");
 
 --   Gl_Interrupts_Default_To_System : Integer := 0;
 --   pragma Export (C, Gl_Interrupts_Default_To_System,
