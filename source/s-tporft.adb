@@ -53,7 +53,7 @@ begin
 
    Local_ATCB.Common.LL.Thread := Thread;
    Local_ATCB.Common.Current_Priority := System.Priority'First;
---   Local_ATCB.Common.Global_Task_Lock_Nesting := 0;
+   Local_ATCB.Common.Global_Task_Lock_Nesting := 0;
    Specific.Set (Local_ATCB'Unchecked_Access);
 
    --  It is now safe to use an allocator
@@ -84,11 +84,11 @@ begin
 --
 --   Self_Id.Common.Task_Image (1 .. 14) := "foreign thread";
 --   Self_Id.Common.Task_Image_Len := 14;
---
---   --  Since this is not an ordinary Ada task, we will start out undeferred
---
---   Self_Id.Deferral_Level := 0;
---
+
+   --  Since this is not an ordinary Ada task, we will start out undeferred
+
+   Self_Id.Deferral_Level := 0;
+
 --   --  We do not provide an alternate stack for foreign threads
 --
 --   Self_Id.Common.Task_Alternate_Stack := Null_Address;

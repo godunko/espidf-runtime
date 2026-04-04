@@ -53,14 +53,14 @@ package body System.Tasking.Initialization is
    package SSL  renames System.Soft_Links;
    package STPO renames System.Task_Primitives.Operations;
 
---   use Parameters;
+   use Parameters;
    use Task_Primitives.Operations;
 
---   Global_Task_Lock : aliased SOL.RTS_Lock;
---   --  This is a global lock; it is used to execute in mutual exclusion from
---   --  all other tasks. It is only used by Task_Lock, Task_Unlock, and
---   --  Final_Task_Unlock.
---
+   Global_Task_Lock : aliased SOL.RTS_Lock;
+   --  This is a global lock; it is used to execute in mutual exclusion from
+   --  all other tasks. It is only used by Task_Lock, Task_Unlock, and
+   --  Final_Task_Unlock.
+
 --   ----------------------------------------------------------------------
 --   -- Tasking versions of some services needed by non-tasking programs --
 --   ----------------------------------------------------------------------
@@ -70,19 +70,19 @@ package body System.Tasking.Initialization is
 --
 --   procedure Abort_Undefer;
 --   --  NON-INLINE versions without Self_ID for soft links
---
---   procedure Task_Lock;
---   --  Locks out other tasks. Preceding a section of code by Task_Lock and
---   --  following it by Task_Unlock creates a critical region. This is used
---   --  for ensuring that a region of non-tasking code (such as code used to
---   --  allocate memory) is tasking safe. Note that it is valid for calls to
---   --  Task_Lock/Task_Unlock to be nested, and this must work properly, i.e.
---   --  only the corresponding outer level Task_Unlock will actually unlock.
---
---   procedure Task_Unlock;
---   --  Releases lock previously set by call to Task_Lock. In the nested case,
---   --  all nested locks must be released before other tasks competing for the
---   --  tasking lock are released.
+
+   procedure Task_Lock;
+   --  Locks out other tasks. Preceding a section of code by Task_Lock and
+   --  following it by Task_Unlock creates a critical region. This is used
+   --  for ensuring that a region of non-tasking code (such as code used to
+   --  allocate memory) is tasking safe. Note that it is valid for calls to
+   --  Task_Lock/Task_Unlock to be nested, and this must work properly, i.e.
+   --  only the corresponding outer level Task_Unlock will actually unlock.
+
+   procedure Task_Unlock;
+   --  Releases lock previously set by call to Task_Lock. In the nested case,
+   --  all nested locks must be released before other tasks competing for the
+   --  tasking lock are released.
 
    function Get_Current_Excep return SSL.EOA;
    --  Task-safe version of SSL.Get_Current_Excep
@@ -195,16 +195,16 @@ package body System.Tasking.Initialization is
 
 --      Self_ID.Deferral_Level := Self_ID.Deferral_Level + 1;
 --   end Defer_Abort;
---
---   --------------------------
---   -- Defer_Abort_Nestable --
---   --------------------------
---
---   procedure Defer_Abort_Nestable (Self_ID : Task_Id) is
---   begin
---      if No_Abort then
---         return;
---      end if;
+
+   --------------------------
+   -- Defer_Abort_Nestable --
+   --------------------------
+
+   procedure Defer_Abort_Nestable (Self_ID : Task_Id) is
+   begin
+      if No_Abort then
+         return;
+      end if;
 
       --  The following assertion is by default disabled. See the comment in
       --  Defer_Abort on the situations in which it may be useful to uncomment
@@ -214,9 +214,9 @@ package body System.Tasking.Initialization is
       --    (Self_ID.Pending_ATC_Level >= Self_ID.ATC_Nesting_Level or else
       --     Self_ID.Deferral_Level > 0);
 
---      Self_ID.Deferral_Level := Self_ID.Deferral_Level + 1;
---   end Defer_Abort_Nestable;
---
+      Self_ID.Deferral_Level := Self_ID.Deferral_Level + 1;
+   end Defer_Abort_Nestable;
+
 --   -----------------
 --   -- Abort_Defer --
 --   -----------------
@@ -293,65 +293,65 @@ package body System.Tasking.Initialization is
       Unlock (Lock'Unchecked_Access);
    end Release_RTS_Lock;
 
---   -----------------------
---   -- Do_Pending_Action --
---   -----------------------
---
---   --  Call only when holding no locks
---
---   procedure Do_Pending_Action (Self_ID : Task_Id) is
---
---   begin
---      pragma Assert (Self_ID = Self and then Self_ID.Deferral_Level = 0);
---
---      --  Needs loop to recheck for pending action in case a new one occurred
---      --  while we had abort deferred below.
---
---      loop
---         --  Temporarily defer abort so that we can lock Self_ID
---
---         Self_ID.Deferral_Level := Self_ID.Deferral_Level + 1;
---
---         Write_Lock (Self_ID);
---         Self_ID.Pending_Action := False;
---         Unlock (Self_ID);
---
---         --  Restore the original Deferral value
---
---         Self_ID.Deferral_Level := Self_ID.Deferral_Level - 1;
---
---         if not Self_ID.Pending_Action then
---            if Self_ID.Pending_ATC_Level < Self_ID.ATC_Nesting_Level then
---               if not Self_ID.Aborting then
---                  Self_ID.Aborting := True;
+   -----------------------
+   -- Do_Pending_Action --
+   -----------------------
+
+   --  Call only when holding no locks
+
+   procedure Do_Pending_Action (Self_ID : Task_Id) is
+
+   begin
+      pragma Assert (Self_ID = Self and then Self_ID.Deferral_Level = 0);
+
+      --  Needs loop to recheck for pending action in case a new one occurred
+      --  while we had abort deferred below.
+
+      loop
+         --  Temporarily defer abort so that we can lock Self_ID
+
+         Self_ID.Deferral_Level := Self_ID.Deferral_Level + 1;
+
+         Write_Lock (Self_ID);
+         Self_ID.Pending_Action := False;
+         Unlock (Self_ID);
+
+         --  Restore the original Deferral value
+
+         Self_ID.Deferral_Level := Self_ID.Deferral_Level - 1;
+
+         if not Self_ID.Pending_Action then
+            if Self_ID.Pending_ATC_Level < Self_ID.ATC_Nesting_Level then
+               if not Self_ID.Aborting then
+                  Self_ID.Aborting := True;
 --                  pragma Debug
 --                    (Debug.Trace (Self_ID, "raise Abort_Signal", 'B'));
---                  raise Standard'Abort_Signal;
---
---                  pragma Assert (not Self_ID.ATC_Hack);
---
---               elsif Self_ID.ATC_Hack then
---
---                  --  The solution really belongs in the Abort_Signal handler
---                  --  for async. entry calls.  The present hack is very
---                  --  fragile. It relies that the very next point after
---                  --  Exit_One_ATC_Level at which the task becomes abortable
---                  --  will be the call to Undefer_Abort in the
---                  --  Abort_Signal handler.
---
---                  Self_ID.ATC_Hack := False;
---
+                  raise Standard'Abort_Signal;
+
+                  pragma Assert (not Self_ID.ATC_Hack);
+
+               elsif Self_ID.ATC_Hack then
+
+                  --  The solution really belongs in the Abort_Signal handler
+                  --  for async. entry calls.  The present hack is very
+                  --  fragile. It relies that the very next point after
+                  --  Exit_One_ATC_Level at which the task becomes abortable
+                  --  will be the call to Undefer_Abort in the
+                  --  Abort_Signal handler.
+
+                  Self_ID.ATC_Hack := False;
+
 --                  pragma Debug
 --                    (Debug.Trace
 --                     (Self_ID, "raise Abort_Signal (ATC hack)", 'B'));
---                  raise Standard'Abort_Signal;
---               end if;
---            end if;
---
---            return;
---         end if;
---      end loop;
---   end Do_Pending_Action;
+                  raise Standard'Abort_Signal;
+               end if;
+            end if;
+
+            return;
+         end if;
+      end loop;
+   end Do_Pending_Action;
 
    -----------------------
    -- Final_Task_Unlock --
@@ -409,8 +409,8 @@ package body System.Tasking.Initialization is
 
       --  Initialize lock used to implement mutual exclusion between all tasks
 
---      Initialize_Lock (Global_Task_Lock'Access, STPO.Global_Task_Level);
---
+      Initialize_Lock (Global_Task_Lock'Access, STPO.Global_Task_Level);
+
 --      --  Notify that the tasking run time has been elaborated so that
 --      --  the tasking version of the soft links can be used.
 --
@@ -418,9 +418,9 @@ package body System.Tasking.Initialization is
 --         SSL.Abort_Defer   := Abort_Defer'Access;
 --         SSL.Abort_Undefer := Abort_Undefer'Access;
 --      end if;
---
---      SSL.Lock_Task          := Task_Lock'Access;
---      SSL.Unlock_Task        := Task_Unlock'Access;
+
+      SSL.Lock_Task          := Task_Lock'Access;
+      SSL.Unlock_Task        := Task_Unlock'Access;
 --      SSL.Check_Abort_Status := Check_Abort_Status'Access;
 --      SSL.Task_Name          := Task_Name'Access;
       SSL.Get_Current_Excep  := Get_Current_Excep'Access;
@@ -623,27 +623,27 @@ package body System.Tasking.Initialization is
 --
 --      pragma Assert (Standard.False);
 --   end Remove_From_All_Tasks_List;
---
---   ---------------
---   -- Task_Lock --
---   ---------------
---
---   procedure Task_Lock (Self_ID : Task_Id) is
---   begin
---      Self_ID.Common.Global_Task_Lock_Nesting :=
---        Self_ID.Common.Global_Task_Lock_Nesting + 1;
---
---      if Self_ID.Common.Global_Task_Lock_Nesting = 1 then
---         Defer_Abort_Nestable (Self_ID);
---         Write_Lock (Global_Task_Lock'Access);
---      end if;
---   end Task_Lock;
---
---   procedure Task_Lock is
---   begin
---      Task_Lock (STPO.Self);
---   end Task_Lock;
---
+
+   ---------------
+   -- Task_Lock --
+   ---------------
+
+   procedure Task_Lock (Self_ID : Task_Id) is
+   begin
+      Self_ID.Common.Global_Task_Lock_Nesting :=
+        Self_ID.Common.Global_Task_Lock_Nesting + 1;
+
+      if Self_ID.Common.Global_Task_Lock_Nesting = 1 then
+         Defer_Abort_Nestable (Self_ID);
+         Write_Lock (Global_Task_Lock'Access);
+      end if;
+   end Task_Lock;
+
+   procedure Task_Lock is
+   begin
+      Task_Lock (STPO.Self);
+   end Task_Lock;
+
 --   ---------------
 --   -- Task_Name --
 --   ---------------
@@ -653,28 +653,28 @@ package body System.Tasking.Initialization is
 --   begin
 --      return Self_Id.Common.Task_Image (1 .. Self_Id.Common.Task_Image_Len);
 --   end Task_Name;
---
---   -----------------
---   -- Task_Unlock --
---   -----------------
---
---   procedure Task_Unlock (Self_ID : Task_Id) is
---   begin
---      pragma Assert (Self_ID.Common.Global_Task_Lock_Nesting > 0);
---      Self_ID.Common.Global_Task_Lock_Nesting :=
---        Self_ID.Common.Global_Task_Lock_Nesting - 1;
---
---      if Self_ID.Common.Global_Task_Lock_Nesting = 0 then
---         Unlock (Global_Task_Lock'Access);
---         Undefer_Abort_Nestable (Self_ID);
---      end if;
---   end Task_Unlock;
---
---   procedure Task_Unlock is
---   begin
---      Task_Unlock (STPO.Self);
---   end Task_Unlock;
---
+
+   -----------------
+   -- Task_Unlock --
+   -----------------
+
+   procedure Task_Unlock (Self_ID : Task_Id) is
+   begin
+      pragma Assert (Self_ID.Common.Global_Task_Lock_Nesting > 0);
+      Self_ID.Common.Global_Task_Lock_Nesting :=
+        Self_ID.Common.Global_Task_Lock_Nesting - 1;
+
+      if Self_ID.Common.Global_Task_Lock_Nesting = 0 then
+         Unlock (Global_Task_Lock'Access);
+         Undefer_Abort_Nestable (Self_ID);
+      end if;
+   end Task_Unlock;
+
+   procedure Task_Unlock is
+   begin
+      Task_Unlock (STPO.Self);
+   end Task_Unlock;
+
 --   -------------------
 --   -- Undefer_Abort --
 --   -------------------
@@ -724,26 +724,26 @@ package body System.Tasking.Initialization is
    --  as entry to the scope of a region with a finalizer and entry into the
    --  body of an accept-procedure.
 
---   procedure Undefer_Abort_Nestable (Self_ID : Task_Id) is
---   begin
---      if No_Abort then
---         return;
---      end if;
---
---      pragma Assert (Self_ID.Deferral_Level > 0);
---
---      Self_ID.Deferral_Level := Self_ID.Deferral_Level - 1;
---
---      if Self_ID.Deferral_Level = 0 then
---
---         pragma Assert (Check_No_Locks (Self_ID));
---
---         if Self_ID.Pending_Action then
---            Do_Pending_Action (Self_ID);
---         end if;
---      end if;
---   end Undefer_Abort_Nestable;
---
+   procedure Undefer_Abort_Nestable (Self_ID : Task_Id) is
+   begin
+      if No_Abort then
+         return;
+      end if;
+
+      pragma Assert (Self_ID.Deferral_Level > 0);
+
+      Self_ID.Deferral_Level := Self_ID.Deferral_Level - 1;
+
+      if Self_ID.Deferral_Level = 0 then
+
+         pragma Assert (Check_No_Locks (Self_ID));
+
+         if Self_ID.Pending_Action then
+            Do_Pending_Action (Self_ID);
+         end if;
+      end if;
+   end Undefer_Abort_Nestable;
+
 --   -------------------
 --   -- Abort_Undefer --
 --   -------------------

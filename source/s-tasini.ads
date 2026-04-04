@@ -98,16 +98,16 @@ package System.Tasking.Initialization is
 --
 --   procedure Undefer_Abort (Self_ID : Task_Id);
 --   pragma Inline (Undefer_Abort);
---
---   --  Nestable inline versions
---
---   procedure Defer_Abort_Nestable (Self_ID : Task_Id);
---   pragma Inline (Defer_Abort_Nestable);
---
---   procedure Undefer_Abort_Nestable (Self_ID : Task_Id);
---   pragma Inline (Undefer_Abort_Nestable);
---
---   procedure Do_Pending_Action (Self_ID : Task_Id);
+
+   --  Nestable inline versions
+
+   procedure Defer_Abort_Nestable (Self_ID : Task_Id);
+   pragma Inline (Defer_Abort_Nestable);
+
+   procedure Undefer_Abort_Nestable (Self_ID : Task_Id);
+   pragma Inline (Undefer_Abort_Nestable);
+
+   procedure Do_Pending_Action (Self_ID : Task_Id);
    --  Only call with no locks, and when Self_ID.Pending_Action = True Perform
    --  necessary pending actions (e.g. abort, priority change). This procedure
    --  is usually called when needed as a result of calling Undefer_Abort,
@@ -125,19 +125,19 @@ package System.Tasking.Initialization is
 --   procedure Change_Base_Priority (T : Task_Id);
 --   --  Change the base priority of T. Has to be called with the affected
 --   --  task's ATCB write-locked. May temporarily release the lock.
---
---   ----------------------
---   -- Task Lock/Unlock --
---   ----------------------
---
---   procedure Task_Lock (Self_ID : Task_Id);
---   pragma Inline (Task_Lock);
---
---   procedure Task_Unlock (Self_ID : Task_Id);
---   pragma Inline (Task_Unlock);
---   --  These are versions of Lock_Task and Unlock_Task created for use
---   --  within the GNARL.
---
+
+   ----------------------
+   -- Task Lock/Unlock --
+   ----------------------
+
+   procedure Task_Lock (Self_ID : Task_Id);
+   pragma Inline (Task_Lock);
+
+   procedure Task_Unlock (Self_ID : Task_Id);
+   pragma Inline (Task_Unlock);
+   --  These are versions of Lock_Task and Unlock_Task created for use
+   --  within the GNARL.
+
 --   procedure Final_Task_Unlock (Self_ID : Task_Id);
 --   --  This version is only for use in Terminate_Task, when the task is
 --   --  relinquishing further rights to its own ATCB. There is a very

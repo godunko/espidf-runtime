@@ -679,8 +679,8 @@ package System.Tasking is
 --
 --      Analyzer : System.Stack_Usage.Stack_Analyzer;
 --      --  For storing information used to measure the stack usage
---
---      Global_Task_Lock_Nesting : Natural;
+
+      Global_Task_Lock_Nesting : Natural;
       --  This is the current nesting level of calls to
       --  System.Tasking.Initialization.Lock_Task. This allows a task to call
       --  Lock_Task multiple times without deadlocking. A task only locks
@@ -826,34 +826,34 @@ package System.Tasking is
 --     array (Positive_Select_Index range <>) of Accept_Alternative;
 --
 --   type Accept_List_Access is access constant Accept_List;
---
---   -----------------------------------
---   -- ATC_Level related definitions --
---   -----------------------------------
---
---   Max_ATC_Nesting : constant Natural := 20;
---   --  The maximum number of nested asynchronous select statements supported
---   --  by the runtime.
---
---   subtype ATC_Level_Base is Integer range -1 .. Max_ATC_Nesting;
---   --  Indicates the number of nested asynchronous task control statements
---   --  or entries a task is in.
---
+
+   -----------------------------------
+   -- ATC_Level related definitions --
+   -----------------------------------
+
+   Max_ATC_Nesting : constant Natural := 20;
+   --  The maximum number of nested asynchronous select statements supported
+   --  by the runtime.
+
+   subtype ATC_Level_Base is Integer range -1 .. Max_ATC_Nesting;
+   --  Indicates the number of nested asynchronous task control statements
+   --  or entries a task is in.
+
 --   Level_Completed_Task : constant ATC_Level_Base := -1;
 --   --  ATC_Level of a task that has "completed". A task reaches the completed
 --   --  state after an abort, exception propagation, or normal exit.
---
---   Level_No_ATC_Occurring : constant ATC_Level_Base := 0;
---   --  ATC_Level of a task not executing a entry call or an asynchronous
---   --  select statement.
---
---   Level_No_Pending_Abort : constant ATC_Level_Base := ATC_Level_Base'Last;
---   --  ATC_Level when there is no pending abort
---
---   subtype ATC_Level is ATC_Level_Base range
---     Level_No_ATC_Occurring .. Level_No_Pending_Abort - 1;
---   --  Nested ATC_Levels valid during the execution of a task
---
+
+   Level_No_ATC_Occurring : constant ATC_Level_Base := 0;
+   --  ATC_Level of a task not executing a entry call or an asynchronous
+   --  select statement.
+
+   Level_No_Pending_Abort : constant ATC_Level_Base := ATC_Level_Base'Last;
+   --  ATC_Level when there is no pending abort
+
+   subtype ATC_Level is ATC_Level_Base range
+     Level_No_ATC_Occurring .. Level_No_Pending_Abort - 1;
+   --  Nested ATC_Levels valid during the execution of a task
+
 --   subtype ATC_Level_Index is ATC_Level range
 --     Level_No_ATC_Occurring + 1 .. ATC_Level'Last;
    --  ATC_Levels valid when a task is executing an entry call or asynchronous
@@ -1047,31 +1047,31 @@ package System.Tasking is
 --      --  Invariant: Awake_Count <= Alive_Count
 --
 --      --  Protection: Self.L
---
---      --  Beginning of flags
---
---      Aborting : Boolean := False;
---      pragma Atomic (Aborting);
---      --  Self is in the process of aborting. While set, prevents multiple
---      --  abort signals from being sent by different aborter while abort
---      --  is acted upon. This is essential since an aborter which calls
---      --  Abort_To_Level could set the Pending_ATC_Level to yet a lower level
---      --  (than the current level), may be preempted and would send the
---      --  abort signal when resuming execution. At this point, the abortee
---      --  may have completed abort to the proper level such that the
---      --  signal (and resulting abort exception) are not handled any more.
---      --  In other words, the flag prevents a race between multiple aborters
---      --
---      --  Protection: protected by atomic access.
---
---      ATC_Hack : Boolean := False;
---      pragma Atomic (ATC_Hack);
---      --  ?????
---      --  Temporary fix, to allow Undefer_Abort to reset Aborting in the
---      --  handler for Abort_Signal that encloses an async. entry call.
---      --  For the longer term, this should be done via code in the
---      --  handler itself.
---
+
+      --  Beginning of flags
+
+      Aborting : Boolean := False;
+      pragma Atomic (Aborting);
+      --  Self is in the process of aborting. While set, prevents multiple
+      --  abort signals from being sent by different aborter while abort
+      --  is acted upon. This is essential since an aborter which calls
+      --  Abort_To_Level could set the Pending_ATC_Level to yet a lower level
+      --  (than the current level), may be preempted and would send the
+      --  abort signal when resuming execution. At this point, the abortee
+      --  may have completed abort to the proper level such that the
+      --  signal (and resulting abort exception) are not handled any more.
+      --  In other words, the flag prevents a race between multiple aborters
+      --
+      --  Protection: protected by atomic access.
+
+      ATC_Hack : Boolean := False;
+      pragma Atomic (ATC_Hack);
+      --  ?????
+      --  Temporary fix, to allow Undefer_Abort to reset Aborting in the
+      --  handler for Abort_Signal that encloses an async. entry call.
+      --  For the longer term, this should be done via code in the
+      --  handler itself.
+
 --      Callable : Boolean := True;
 --      --  It is OK to call entries of this task
 --
@@ -1085,22 +1085,22 @@ package System.Tasking is
       --  Indicates if one or more Interrupt Entries are attached to the task.
       --  This flag is needed for cleaning up the Interrupt Entry bindings.
 
---      Pending_Action : Boolean := False;
---      --  Unified flag indicating some action needs to be take when abort
---      --  next becomes undeferred. Currently set if:
---      --  . Pending_Priority_Change is set
---      --  . Pending_ATC_Level is changed
---      --  . Requeue involving POs
---      --    (Abortable field may have changed and the Wait_Until_Abortable
---      --     has to recheck the abortable status of the call.)
---      --  . Exception_To_Raise is non-null
---      --
---      --  Protection: Self.L
---      --
---      --  This should never be reset back to False outside of the procedure
---      --  Do_Pending_Action, which is called by Undefer_Abort. It should only
---      --  be set to True by Set_Priority and Abort_To_Level.
---
+      Pending_Action : Boolean := False;
+      --  Unified flag indicating some action needs to be take when abort
+      --  next becomes undeferred. Currently set if:
+      --  . Pending_Priority_Change is set
+      --  . Pending_ATC_Level is changed
+      --  . Requeue involving POs
+      --    (Abortable field may have changed and the Wait_Until_Abortable
+      --     has to recheck the abortable status of the call.)
+      --  . Exception_To_Raise is non-null
+      --
+      --  Protection: Self.L
+      --
+      --  This should never be reset back to False outside of the procedure
+      --  Do_Pending_Action, which is called by Undefer_Abort. It should only
+      --  be set to True by Set_Priority and Abort_To_Level.
+
 --      Pending_Priority_Change : Boolean := False;
 --      --  Flag to indicate pending priority change (for dynamic priorities
 --      --  package). The base priority is updated on the next abort
@@ -1114,10 +1114,10 @@ package System.Tasking is
 --      --  Protection: Self.L
 --
 --      --  End of flags
---
---      --  Beginning of counts
---
---      ATC_Nesting_Level : ATC_Level := Level_No_ATC_Occurring;
+
+      --  Beginning of counts
+
+      ATC_Nesting_Level : ATC_Level := Level_No_ATC_Occurring;
       --  The dynamic level of ATC nesting (currently executing nested
       --  asynchronous select statements) in this task.
 
@@ -1129,28 +1129,28 @@ package System.Tasking is
       --  task entry call). No other task should attempt to read or modify
       --  this value.
 
---      Deferral_Level : Natural := 1;
---      --  This is the number of times that Defer_Abort has been called by
---      --  this task without a matching Undefer_Abort call. Abortion is only
---      --  allowed when this zero. It is initially 1, to protect the task at
---      --  startup.
---
---      --  Protection: Only updated by Self; access assumed to be atomic
---
---      Pending_ATC_Level : ATC_Level_Base := Level_No_Pending_Abort;
---      --  Indicates the ATC level to which this task is currently being
---      --  aborted. Two special values exist:
---      --
---      --    * Level_Completed_Task: the task has completed.
---      --
---      --    * Level_No_Pending_Abort: the task is not being aborted to any
---      --                              level.
---      --
---      --  All other values indicate the task has not completed. This should
---      --  ONLY be modified by Abort_To_Level and Exit_One_ATC_Level.
---      --
---      --  Protection: Self.L
---
+      Deferral_Level : Natural := 1;
+      --  This is the number of times that Defer_Abort has been called by
+      --  this task without a matching Undefer_Abort call. Abortion is only
+      --  allowed when this zero. It is initially 1, to protect the task at
+      --  startup.
+
+      --  Protection: Only updated by Self; access assumed to be atomic
+
+      Pending_ATC_Level : ATC_Level_Base := Level_No_Pending_Abort;
+      --  Indicates the ATC level to which this task is currently being
+      --  aborted. Two special values exist:
+      --
+      --    * Level_Completed_Task: the task has completed.
+      --
+      --    * Level_No_Pending_Abort: the task is not being aborted to any
+      --                              level.
+      --
+      --  All other values indicate the task has not completed. This should
+      --  ONLY be modified by Abort_To_Level and Exit_One_ATC_Level.
+      --
+      --  Protection: Self.L
+
 --      Serial_Number : Task_Serial_Number;
       --  Monotonic counter to provide some way to check locking rules/ordering
 
