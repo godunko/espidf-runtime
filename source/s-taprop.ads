@@ -505,22 +505,22 @@ package System.Task_Primitives.Operations is
 --
 --   procedure Finalize (S : in out Suspension_Object);
 --   --  Finalize the suspension object
---
---   -----------------------------------------
---   -- Runtime System Debugging Interfaces --
---   -----------------------------------------
---
---   --  These interfaces have been added to assist in debugging the
---   --  tasking runtime system.
---
+
+   -----------------------------------------
+   -- Runtime System Debugging Interfaces --
+   -----------------------------------------
+
+   --  These interfaces have been added to assist in debugging the
+   --  tasking runtime system.
+
 --   function Check_Exit (Self_ID : ST.Task_Id) return Boolean;
 --   pragma Inline (Check_Exit);
 --   --  Check that the current task is holding only Global_Task_Lock
---
---   function Check_No_Locks (Self_ID : ST.Task_Id) return Boolean;
---   pragma Inline (Check_No_Locks);
---   --  Check that current task is holding no locks
---
+
+   function Check_No_Locks (Self_ID : ST.Task_Id) return Boolean;
+   pragma Inline (Check_No_Locks);
+   --  Check that current task is holding no locks
+
 --   function Suspend_Task
 --     (T           : ST.Task_Id;
 --      Thread_Self : OSI.Thread_Id) return Boolean;

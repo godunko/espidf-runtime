@@ -118,6 +118,17 @@ package body System.Task_Primitives.Operations is
       --  end if;
    end Initialize_TCB;
 
+   --------------------
+   -- Check_No_Locks --
+   --------------------
+
+   function Check_No_Locks (Self_ID : ST.Task_Id) return Boolean is
+      pragma Unreferenced (Self_ID);
+   begin
+      --  dummy version
+      return True;
+   end Check_No_Locks;
+
    --------------
    -- Lock_RTS --
    --------------
