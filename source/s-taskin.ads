@@ -444,10 +444,10 @@ package System.Tasking is
 
    type Access_Boolean is access all Boolean;
 
---   function Detect_Blocking return Boolean;
---   pragma Inline (Detect_Blocking);
---   --  Return whether the Detect_Blocking pragma is enabled
---
+   function Detect_Blocking return Boolean;
+   pragma Inline (Detect_Blocking);
+   --  Return whether the Detect_Blocking pragma is enabled
+
 --   function Storage_Size (T : Task_Id) return System.Parameters.Size_Type;
    --  Retrieve from the TCB of the task the allocated size of its stack,
    --  either the system default or the size specified by a pragma. This is in
@@ -557,8 +557,8 @@ package System.Tasking is
       --  accepts an entry or when Created activates, at which points Self is
       --  suspended.
 
---      Protected_Action_Nesting : Natural;
---      pragma Atomic (Protected_Action_Nesting);
+      Protected_Action_Nesting : Natural;
+      pragma Atomic (Protected_Action_Nesting);
       --  The dynamic level of protected action nesting for this task. This
       --  field is needed for checking whether potentially blocking operations
       --  are invoked from protected actions. pragma Atomic is used because it

@@ -40,17 +40,17 @@ package body System.Tasking is
    -- Detect_Blocking --
    ---------------------
 
---   function Detect_Blocking return Boolean is
---      GL_Detect_Blocking : Integer;
---      pragma Import (C, GL_Detect_Blocking, "__gl_detect_blocking");
+   function Detect_Blocking return Boolean is
+      GL_Detect_Blocking : Integer;
+      pragma Import (C, GL_Detect_Blocking, "__gl_detect_blocking");
       --  Global variable exported by the binder generated file. A value equal
       --  to 1 indicates that pragma Detect_Blocking is active, while 0 is used
       --  for the pragma not being present.
 
---   begin
---      return GL_Detect_Blocking = 1;
---   end Detect_Blocking;
---
+   begin
+      return GL_Detect_Blocking = 1;
+   end Detect_Blocking;
+
 --   -----------------------
 --   -- Number_Of_Entries --
 --   -----------------------

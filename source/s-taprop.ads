@@ -146,9 +146,9 @@ package System.Task_Primitives.Operations is
    --  call specified below. See locking rules in System.Tasking (spec) for
    --  more details.
 
---   procedure Initialize_Lock
---     (Prio : System.Any_Priority;
---      L    : not null access Lock);
+   procedure Initialize_Lock
+     (Prio : System.Any_Priority;
+      L    : not null access Lock);
    procedure Initialize_Lock
      (L     : not null access System.OS_Locks.RTS_Lock;
       Level : Lock_Level);
@@ -179,9 +179,9 @@ package System.Task_Primitives.Operations is
    --  Finalize a lock object, freeing any resources allocated by the
    --  corresponding Initialize_Lock operation.
 
---   procedure Write_Lock
---     (L                 : not null access Lock;
---      Ceiling_Violation : out Boolean);
+   procedure Write_Lock
+     (L                 : not null access Lock;
+      Ceiling_Violation : out Boolean);
    procedure Write_Lock (L : not null access System.OS_Locks.RTS_Lock);
    procedure Write_Lock (T : ST.Task_Id);
    pragma Inline (Write_Lock);
@@ -228,8 +228,8 @@ package System.Task_Primitives.Operations is
    --  potential write access, and (3) implementations of priority ceiling
    --  locking that make a reader-writer distinction have higher overhead.
 
---   procedure Unlock
---     (L : not null access Lock);
+   procedure Unlock
+     (L : not null access Lock);
    procedure Unlock (L : not null access System.OS_Locks.RTS_Lock);
    procedure Unlock (T : ST.Task_Id);
    pragma Inline (Unlock);
@@ -288,18 +288,18 @@ package System.Task_Primitives.Operations is
 
    --  For now, we will just shut down the system if there is ceiling violation
 
---   procedure Set_Ceiling
---     (L    : not null access Lock;
---      Prio : System.Any_Priority);
---   pragma Inline (Set_Ceiling);
---   --  Change the ceiling priority associated to the lock
---   --
---   --  The effect is undefined unless the calling task holds read or write
---   --  permission for the lock L, and L is the lock object most recently
---   --  locked by the calling task for which the calling task still holds
---   --  read or write permission. (That is, matching pairs of Lock and Unlock
---   --  operations on each lock object must be properly nested.)
---
+   procedure Set_Ceiling
+     (L    : not null access Lock;
+      Prio : System.Any_Priority);
+   pragma Inline (Set_Ceiling);
+   --  Change the ceiling priority associated to the lock
+   --
+   --  The effect is undefined unless the calling task holds read or write
+   --  permission for the lock L, and L is the lock object most recently
+   --  locked by the calling task for which the calling task still holds
+   --  read or write permission. (That is, matching pairs of Lock and Unlock
+   --  operations on each lock object must be properly nested.)
+
 --   procedure Yield (Do_Yield : Boolean := True);
 --   pragma Inline (Yield);
    --  Yield the processor. Add the calling task to the tail of the ready queue

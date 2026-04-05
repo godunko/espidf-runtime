@@ -11,6 +11,9 @@ with System.OS_Locks;
 package System.Task_Primitives is
    pragma Preelaborate;
 
+   type Lock is limited private;
+   --  Should be used for implementation of protected objects
+
    type Private_Data is limited private;
    --  Any information that the GNULLI needs maintained on a per-task basis.
    --  A component of this type is guaranteed to be included in the
@@ -20,6 +23,8 @@ package System.Task_Primitives is
    --  Type used for task addresses and its size
 
 private
+
+   type Lock is new System.OS_Locks.RTS_Lock;
 
    type Private_Data is limited record
       Thread : aliased System.OS_Interface.Thread_Id :=

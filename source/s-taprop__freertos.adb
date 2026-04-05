@@ -4,6 +4,8 @@
 --  This package contains all the GNULL primitives that interface directly with
 --  the underlying OS.
 
+with Interfaces.C;
+
 with System.FreeRTOS;
 with System.OS_Interface;
 with System.Parameters;
@@ -15,6 +17,10 @@ package body System.Task_Primitives.Operations is
    use System.OS_Locks;
    use System.Parameters;
    use System.Tasking;
+
+   use type Interfaces.C.int;
+
+   subtype int is Interfaces.C.int;
 
    ----------------
    -- Local Data --
@@ -234,23 +240,38 @@ package body System.Task_Primitives.Operations is
    ---------------------
 
    procedure Initialize_Lock
-     (L     : not null access RTS_Lock;
-      Level : Lock_Level)
+     (Prio : System.Any_Priority with Unreferenced;
+      L    : not null access Lock)
    is
-      pragma Unreferenced (Level);
-
       Success : BaseType_t;
 
    begin
       L.Mutex := xSemaphoreCreateBinary;
-      --  L.Prio_Ceiling := int (System.Any_Priority'Last);
       pragma Assert (L.Mutex /= Null_SemaphoreHandle_t);
+      --  L.Prio_Ceiling := int (Prio);
+      --  L.Protocol := Mutex_Protocol;
 
       Success := xSemaphoreGive (L.Mutex);
+      pragma Assert (Success = pdTRUE);
       --  Binary semaphore (opposite to mutex) is in "unavailable" state after
       --  creation and must be "given" first.
+   end Initialize_Lock;
 
+   procedure Initialize_Lock
+     (L     : not null access RTS_Lock;
+      Level : Lock_Level with Unreferenced)
+   is
+      Success : BaseType_t;
+
+   begin
+      L.Mutex := xSemaphoreCreateBinary;
+      pragma Assert (L.Mutex /= Null_SemaphoreHandle_t);
+      --  L.Prio_Ceiling := int (System.Any_Priority'Last);
+
+      Success := xSemaphoreGive (L.Mutex);
       pragma Assert (Success = pdTRUE);
+      --  Binary semaphore (opposite to mutex) is in "unavailable" state after
+      --  creation and must be "given" first.
    end Initialize_Lock;
 
    -------------------
@@ -265,6 +286,26 @@ package body System.Task_Primitives.Operations is
    ----------------
    -- Write_Lock --
    ----------------
+
+   procedure Write_Lock
+     (L                 : not null access Lock;
+      Ceiling_Violation : out Boolean)
+   is
+      Result : BaseType_t;
+
+   begin
+      if L.Protocol = Prio_Protect
+        and then int (Self.Common.Current_Priority) > L.Prio_Ceiling
+      then
+         Ceiling_Violation := True;
+         return;
+      else
+         Ceiling_Violation := False;
+      end if;
+
+      Result := xSemaphoreTake (L.Mutex, portMAX_DELAY);
+      pragma Assert (Result = pdTRUE);
+   end Write_Lock;
 
    procedure Write_Lock (L : not null access RTS_Lock) is
       Result : BaseType_t;
@@ -284,6 +325,13 @@ package body System.Task_Primitives.Operations is
    -- Unlock --
    ------------
 
+   procedure Unlock (L : not null access Lock) is
+      Result : BaseType_t;
+   begin
+      Result := xSemaphoreGive (L.Mutex);
+      pragma Assert (Result = pdTRUE);
+   end Unlock;
+
    procedure Unlock (L : not null access RTS_Lock) is
       Result : BaseType_t;
    begin
@@ -297,6 +345,21 @@ package body System.Task_Primitives.Operations is
       Result := xSemaphoreGive (T.Common.LL.L.Mutex);
       pragma Assert (Result = pdTRUE);
    end Unlock;
+
+   -----------------
+   -- Set_Ceiling --
+   -----------------
+
+   --  XXX Dynamic priority ceilings are not supported by the underlying system
+
+   procedure Set_Ceiling
+     (L    : not null access Lock;
+      Prio : System.Any_Priority)
+   is
+      pragma Unreferenced (L, Prio);
+   begin
+      null;
+   end Set_Ceiling;
 
    ----------------
    -- Enter_Task --
