@@ -93,8 +93,8 @@ package body System.Tasking.Initialization is
    procedure Initialize_RTS_Lock (Addr : Address);
    --  Initialize the RTS lock at Addr
 
---   procedure Finalize_RTS_Lock (Addr : Address);
---   --  Finalize the RTS lock at Addr
+   procedure Finalize_RTS_Lock (Addr : Address);
+   --  Finalize the RTS lock at Addr
 
    procedure Acquire_RTS_Lock (Addr : Address);
    --  Acquire the RTS lock at Addr
@@ -254,18 +254,18 @@ package body System.Tasking.Initialization is
       Initialize_Lock (Lock'Unchecked_Access, PO_Level);
    end Initialize_RTS_Lock;
 
---   -----------------------
---   -- Finalize_RTS_Lock --
---   -----------------------
---
---   procedure Finalize_RTS_Lock (Addr : Address) is
---      Lock : aliased SOL.RTS_Lock;
---      for Lock'Address use Addr;
---      pragma Import (Ada, Lock);
---
---   begin
---      Finalize_Lock (Lock'Unchecked_Access);
---   end Finalize_RTS_Lock;
+   -----------------------
+   -- Finalize_RTS_Lock --
+   -----------------------
+
+   procedure Finalize_RTS_Lock (Addr : Address) is
+      Lock : aliased SOL.RTS_Lock;
+      for Lock'Address use Addr;
+      pragma Import (Ada, Lock);
+
+   begin
+      Finalize_Lock (Lock'Unchecked_Access);
+   end Finalize_RTS_Lock;
 
    ----------------------
    -- Acquire_RTS_Lock --
@@ -443,7 +443,7 @@ package body System.Tasking.Initialization is
    procedure Tasking_Runtime_Initialize is
    begin
       SSL.Initialize_RTS_Lock := Initialize_RTS_Lock'Access;
---      SSL.Finalize_RTS_Lock   := Finalize_RTS_Lock'Access;
+      SSL.Finalize_RTS_Lock   := Finalize_RTS_Lock'Access;
       SSL.Acquire_RTS_Lock    := Acquire_RTS_Lock'Access;
       SSL.Release_RTS_Lock    := Release_RTS_Lock'Access;
    end Tasking_Runtime_Initialize;

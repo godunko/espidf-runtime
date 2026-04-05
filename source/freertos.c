@@ -16,6 +16,11 @@ SemaphoreHandle_t __gnat_xSemaphoreCreateRecursiveMutex()
   return xSemaphoreCreateRecursiveMutex();
 }
 
+void __gnat_vSemaphoreDelete(SemaphoreHandle_t xSemaphore)
+{
+  vSemaphoreDelete(xSemaphore);
+}
+
 BaseType_t __gnat_xSemaphoreGive(SemaphoreHandle_t xSemaphore)
 {
   return xSemaphoreGive(xSemaphore);

@@ -37,6 +37,10 @@ package System.FreeRTOS is
      with Import, Convention => C,
           External_Name => "__gnat_xSemaphoreCreateRecursiveMutex";
 
+   procedure vSemaphoreDelete
+     (xSemaphore : SemaphoreHandle_t)
+     with Import, Convention => C, External_Name => "__gnat_vSemaphoreDelete";
+
    function xSemaphoreTake
      (xSemaphore   : SemaphoreHandle_t;
       xTicksToWait : TickType_t) return BaseType_t

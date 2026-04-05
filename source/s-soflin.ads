@@ -261,7 +261,7 @@ package System.Soft_Links is
    --  dragging the tasking runtime when using access-to-controlled types.
 
    Initialize_RTS_Lock : Set_Address_Call := Null_Set_Address'Access;
---   Finalize_RTS_Lock   : Set_Address_Call := Null_Set_Address'Access;
+   Finalize_RTS_Lock   : Set_Address_Call := Null_Set_Address'Access;
    Acquire_RTS_Lock    : Set_Address_Call := Null_Set_Address'Access;
    Release_RTS_Lock    : Set_Address_Call := Null_Set_Address'Access;
    --  The initialization of these variables must be static because the value

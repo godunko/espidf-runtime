@@ -253,6 +253,15 @@ package body System.Task_Primitives.Operations is
       pragma Assert (Success = pdTRUE);
    end Initialize_Lock;
 
+   -------------------
+   -- Finalize_Lock --
+   -------------------
+
+   procedure Finalize_Lock (L : not null access RTS_Lock) is
+   begin
+      vSemaphoreDelete (L.Mutex);
+   end Finalize_Lock;
+
    ----------------
    -- Write_Lock --
    ----------------
