@@ -35,6 +35,7 @@
       "s-crtl.ads": { "crate": "espidf_gnat_runtime", "path": "source/gcc-15/libgnat/s-crtl.ads" },
       "s-excmac.adb": { "crate": "bb_runtimes", "path": "gnat_rts_sources/include/rts-sources/full/zcx-dw2/s-excmac.adb" },
       "s-excmac.ads": { "crate": "bb_runtimes", "path": "gnat_rts_sources/include/rts-sources/full/zcx-dw2/s-excmac.ads" },
+      "s-freert.adb": { "crate": "espidf_gnat_runtime", "path": "source/s-freert.adb" },
       "s-freert.ads": { "crate": "espidf_gnat_runtime", "path": "source/s-freert.ads" },
       "s-inifin.adb": { "crate": "espidf_gnat_runtime", "path": "source/s-inifin.adb" },
       "s-inifin.ads": { "crate": "espidf_gnat_runtime", "path": "source/s-inifin.ads" },
@@ -81,6 +82,8 @@
     {
       "s-taprob.adb": { "crate": "espidf_gnat_runtime", "path": "source/gcc-15/libgnarl/s-taprob.adb" },
       "s-taprob.ads": { "crate": "espidf_gnat_runtime", "path": "source/gcc-15/libgnarl/s-taprob.ads" },
+      "s-tpoben.adb": { "crate": "espidf_gnat_runtime", "path": "source/gcc-15/libgnarl/s-tpoben.adb" },
+      "s-tpoben.ads": { "crate": "espidf_gnat_runtime", "path": "source/gcc-15/libgnarl/s-tpoben.ads" },
     }
   },
 

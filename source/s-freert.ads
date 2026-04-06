@@ -9,9 +9,19 @@ package System.FreeRTOS is
    pdFALSE : constant BaseType_t := 0;
    pdTRUE  : constant BaseType_t := 1;
 
+   type UBaseType_t is new Interfaces.C.unsigned;
+
    type TickType_t is new Interfaces.Unsigned_32;
 
    portMAX_DELAY : constant TickType_t := TickType_t'Last;
+
+   configMAX_PRIORITIES : constant := 25;
+
+   function To_FreeRTOS_Priority
+     (Priority : System.Priority) return UBaseType_t;
+   --  Converts Ada task priority into FreeRTOS task priority. Valid for
+   --  software priorities only (doesn't support hardware interrupt
+   --  priorities).
 
    type TaskHandle_t is private;
 
@@ -20,6 +30,12 @@ package System.FreeRTOS is
    function xTaskGetCurrentTaskHandle return TaskHandle_t
      with Import, Convention => C,
           External_Name => "xTaskGetCurrentTaskHandle";
+
+   procedure vTaskPrioritySet
+     (xTask         : TaskHandle_t;
+      uxNewPriority : UBaseType_t)
+     with Import, Convention => C,
+          External_Name => "vTaskPrioritySet";
 
    type SemaphoreHandle_t is private;
 

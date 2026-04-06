@@ -391,6 +391,21 @@ package body System.Task_Primitives.Operations is
       null;
    end Set_Ceiling;
 
+   ------------------
+   -- Set_Priority --
+   ------------------
+
+   procedure Set_Priority
+     (T                   : Task_Id;
+      Prio                : System.Any_Priority;
+      Loss_Of_Inheritance : Boolean := False with Unreferenced)
+   is
+   begin
+      vTaskPrioritySet (T.Common.LL.Thread, To_FreeRTOS_Priority (Prio));
+
+      T.Common.Current_Priority := Prio;
+   end Set_Priority;
+
    ----------------
    -- Enter_Task --
    ----------------
