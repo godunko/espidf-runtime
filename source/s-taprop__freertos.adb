@@ -292,6 +292,11 @@ package body System.Task_Primitives.Operations is
    -- Finalize_Lock --
    -------------------
 
+   procedure Finalize_Lock (L : not null access Lock) is
+   begin
+      vSemaphoreDelete (L.Mutex);
+   end Finalize_Lock;
+
    procedure Finalize_Lock (L : not null access RTS_Lock) is
    begin
       vSemaphoreDelete (L.Mutex);

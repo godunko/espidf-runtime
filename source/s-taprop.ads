@@ -173,7 +173,7 @@ package System.Task_Primitives.Operations is
    --
    --  These operations raise Storage_Error if a lack of storage is detected
 
---   procedure Finalize_Lock (L : not null access Lock);
+   procedure Finalize_Lock (L : not null access Lock);
    procedure Finalize_Lock (L : not null access System.OS_Locks.RTS_Lock);
    pragma Inline (Finalize_Lock);
    --  Finalize a lock object, freeing any resources allocated by the
