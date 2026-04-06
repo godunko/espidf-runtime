@@ -79,8 +79,8 @@
     "kernel": "custom",
     "files":
     {
-      "s-taprob.adb": { "crate": "espidf_gnat_runtime", "path": "source/s-taprob.adb" },
-      "s-taprob.ads": { "crate": "espidf_gnat_runtime", "path": "source/s-taprob.ads" },
+      "s-taprob.adb": { "crate": "espidf_gnat_runtime", "path": "source/gcc-15/libgnarl/s-taprob.adb" },
+      "s-taprob.ads": { "crate": "espidf_gnat_runtime", "path": "source/gcc-15/libgnarl/s-taprob.ads" },
     }
   },
 
