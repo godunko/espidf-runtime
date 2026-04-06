@@ -154,18 +154,18 @@ package body System.Tasking.Initialization is
 --         return 0;
 --      end if;
 --   end Check_Abort_Status;
---
---   -----------------
---   -- Defer_Abort --
---   -----------------
---
---   procedure Defer_Abort (Self_ID : Task_Id) is
---   begin
---      if No_Abort then
---         return;
---      end if;
---
---      pragma Assert (Self_ID.Deferral_Level = 0);
+
+   -----------------
+   -- Defer_Abort --
+   -----------------
+
+   procedure Defer_Abort (Self_ID : Task_Id) is
+   begin
+      if No_Abort then
+         return;
+      end if;
+
+      pragma Assert (Self_ID.Deferral_Level = 0);
 
       --  pragma Assert
       --    (Self_ID.Pending_ATC_Level >= Self_ID.ATC_Nesting_Level);
@@ -193,8 +193,8 @@ package body System.Tasking.Initialization is
       --  before undeferring abort; we then modified the code to ensure the
       --  abort would be detected.
 
---      Self_ID.Deferral_Level := Self_ID.Deferral_Level + 1;
---   end Defer_Abort;
+      Self_ID.Deferral_Level := Self_ID.Deferral_Level + 1;
+   end Defer_Abort;
 
    --------------------------
    -- Defer_Abort_Nestable --
@@ -433,7 +433,7 @@ package body System.Tasking.Initialization is
       --  Abort is deferred in a new ATCB, so we need to undefer abort at this
       --  stage to make the environment task abortable.
 
---      Undefer_Abort (Environment_Task);
+      Undefer_Abort (Environment_Task);
    end Init_RTS;
 
    --------------------------------
@@ -675,37 +675,37 @@ package body System.Tasking.Initialization is
       Task_Unlock (STPO.Self);
    end Task_Unlock;
 
---   -------------------
---   -- Undefer_Abort --
---   -------------------
---
---   --  Precondition : Self does not hold any locks
---
---   --  Undefer_Abort is called on any abort completion point (aka.
---   --  synchronization point). It performs the following actions if they
---   --  are pending: (1) change the base priority, (2) abort the task.
---
---   --  The priority change has to occur before abort. Otherwise, it would
---   --  take effect no earlier than the next abort completion point.
---
---   procedure Undefer_Abort (Self_ID : Task_Id) is
---   begin
---      if No_Abort then
---         return;
---      end if;
---
---      pragma Assert (Self_ID.Deferral_Level = 1);
---
---      Self_ID.Deferral_Level := Self_ID.Deferral_Level - 1;
---
---      if Self_ID.Deferral_Level = 0 then
---         pragma Assert (Check_No_Locks (Self_ID));
---
---         if Self_ID.Pending_Action then
---            Do_Pending_Action (Self_ID);
---         end if;
---      end if;
---   end Undefer_Abort;
+   -------------------
+   -- Undefer_Abort --
+   -------------------
+
+   --  Precondition : Self does not hold any locks
+
+   --  Undefer_Abort is called on any abort completion point (aka.
+   --  synchronization point). It performs the following actions if they
+   --  are pending: (1) change the base priority, (2) abort the task.
+
+   --  The priority change has to occur before abort. Otherwise, it would
+   --  take effect no earlier than the next abort completion point.
+
+   procedure Undefer_Abort (Self_ID : Task_Id) is
+   begin
+      if No_Abort then
+         return;
+      end if;
+
+      pragma Assert (Self_ID.Deferral_Level = 1);
+
+      Self_ID.Deferral_Level := Self_ID.Deferral_Level - 1;
+
+      if Self_ID.Deferral_Level = 0 then
+         pragma Assert (Check_No_Locks (Self_ID));
+
+         if Self_ID.Pending_Action then
+            Do_Pending_Action (Self_ID);
+         end if;
+      end if;
+   end Undefer_Abort;
 
    ----------------------------
    -- Undefer_Abort_Nestable --

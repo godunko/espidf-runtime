@@ -93,11 +93,11 @@ package System.Tasking.Initialization is
 
    --  Non-nestable inline versions
 
---   procedure Defer_Abort (Self_ID : Task_Id);
---   pragma Inline (Defer_Abort);
---
---   procedure Undefer_Abort (Self_ID : Task_Id);
---   pragma Inline (Undefer_Abort);
+   procedure Defer_Abort (Self_ID : Task_Id);
+   pragma Inline (Defer_Abort);
+
+   procedure Undefer_Abort (Self_ID : Task_Id);
+   pragma Inline (Undefer_Abort);
 
    --  Nestable inline versions
 
