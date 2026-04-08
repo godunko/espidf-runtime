@@ -129,6 +129,15 @@ package body System.Task_Primitives.Operations is
       end if;
    end Initialize_TCB;
 
+   ----------------
+   -- Abort_Task --
+   ----------------
+
+   procedure Abort_Task (T : Task_Id) is
+   begin
+      vTaskDelete (T.Common.LL.Thread);
+   end Abort_Task;
+
    --------------------
    -- Check_No_Locks --
    --------------------

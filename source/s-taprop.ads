@@ -119,8 +119,8 @@ package System.Task_Primitives.Operations is
    --  called from Free_Task. After it is called there should be no further
    --  reference to the ATCB that corresponds to T.
 
---   procedure Abort_Task (T : ST.Task_Id);
---   pragma Inline (Abort_Task);
+   procedure Abort_Task (T : ST.Task_Id);
+   pragma Inline (Abort_Task);
    --  Abort the task specified by T (the target task). This causes the target
    --  task to asynchronously raise Abort_Signal if abort is not deferred, or
    --  if it is blocked on an interruptible system call.

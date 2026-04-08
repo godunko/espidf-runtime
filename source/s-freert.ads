@@ -27,6 +27,9 @@ package System.FreeRTOS is
 
    Null_TaskHandle_t : constant TaskHandle_t;
 
+   procedure vTaskDelete (xTask : TaskHandle_t)
+     with Import, Convention => C, External_Name => "vTaskDelete";
+
    function xTaskGetCurrentTaskHandle return TaskHandle_t
      with Import, Convention => C,
           External_Name => "xTaskGetCurrentTaskHandle";
