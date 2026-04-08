@@ -400,6 +400,18 @@ package body System.Task_Primitives.Operations is
       null;
    end Set_Ceiling;
 
+   ------------
+   -- Wakeup --
+   ------------
+
+   procedure Wakeup (T : Task_Id; Reason : System.Tasking.Task_States) is
+      pragma Unreferenced (Reason);
+      Result : BaseType_t;
+   begin
+      Result := xSemaphoreGive (T.Common.LL.CV);
+      pragma Assert (Result = pdTRUE);
+   end Wakeup;
+
    ------------------
    -- Set_Priority --
    ------------------

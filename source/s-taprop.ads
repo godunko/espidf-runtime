@@ -391,14 +391,14 @@ package System.Task_Primitives.Operations is
 --      Mode    : ST.Delay_Modes);
 --   --  Implement the semantics of the delay statement.
 --   --  The caller should be abort-deferred and should not hold any locks.
---
---   procedure Wakeup
---     (T      : ST.Task_Id;
---      Reason : System.Tasking.Task_States);
---   pragma Inline (Wakeup);
---   --  Wake up task T if it is waiting on a Sleep call (of ordinary
---   --  or timed variety), making it ready for execution once again.
---   --  If the task T is not waiting on a Sleep, the operation has no effect.
+
+   procedure Wakeup
+     (T      : ST.Task_Id;
+      Reason : System.Tasking.Task_States);
+   pragma Inline (Wakeup);
+   --  Wake up task T if it is waiting on a Sleep call (of ordinary
+   --  or timed variety), making it ready for execution once again.
+   --  If the task T is not waiting on a Sleep, the operation has no effect.
 
    function Environment_Task return ST.Task_Id;
    pragma Inline (Environment_Task);
