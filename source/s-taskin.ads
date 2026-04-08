@@ -34,7 +34,7 @@
 --  Note: the compiler generates direct calls to this interface, via Rtsfind.
 --  Any changes to this interface may require corresponding compiler changes.
 
---  with Ada.Exceptions;
+with Ada.Exceptions;
 --  with Ada.Unchecked_Conversion;
 
 with System.Multiprocessors;
@@ -884,11 +884,11 @@ package System.Tasking is
 
 --      Uninterpreted_Data : System.Address;
 --      --  Data passed by the compiler
---
---      Exception_To_Raise : Ada.Exceptions.Exception_Id;
---      --  The exception to raise once this call has been completed without
---      --  being aborted.
---
+
+      Exception_To_Raise : Ada.Exceptions.Exception_Id;
+      --  The exception to raise once this call has been completed without
+      --  being aborted.
+
 --      Prev : Entry_Call_Link;
 
       Next : Entry_Call_Link;
