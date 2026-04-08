@@ -246,9 +246,9 @@ package System.Tasking is
       Tail : Entry_Call_Link;
    end record;
 
---   type Task_Entry_Queue_Array is
---     array (Task_Entry_Index range <>) of Entry_Queue;
---
+   type Task_Entry_Queue_Array is
+     array (Task_Entry_Index range <>) of Entry_Queue;
+
 --   --  A data structure which contains the string names of entries and entry
 --   --  family members.
 --
@@ -889,7 +889,7 @@ package System.Tasking is
       --  The exception to raise once this call has been completed without
       --  being aborted.
 
---      Prev : Entry_Call_Link;
+      Prev : Entry_Call_Link;
 
       Next : Entry_Call_Link;
 
@@ -900,33 +900,33 @@ package System.Tasking is
       --  get Self from Level, or Level from Self. However, this requires
       --  non-portable address arithmetic.
 
---      E : Entry_Index;
---
---      Prio : System.Any_Priority;
---
---      --  The above fields are those that there may be some hope of packing.
---      --  They are gathered together to allow for compilers that lay records
---      --  out contiguously, to allow for such packing.
---
---      Called_Task : Task_Id;
---      pragma Atomic (Called_Task);
---      --  Use for task entry calls. The value is null if the call record is
---      --  not in use. Conversely, unless State is Done and Onqueue is false,
---      --  Called_Task points to an ATCB.
---      --
---      --  Protection:  Called_Task.L
---
---      Called_PO : System.Address;
---      pragma Atomic (Called_PO);
---      --  Similar to Called_Task but for protected objects
---      --
---      --  Note that the previous implementation tried to merge both
---      --  Called_Task and Called_PO but this ended up in many unexpected
---      --  complications (e.g having to add a magic number in the ATCB, which
---      --  caused gdb lots of confusion) with no real gain since the
---      --  Lock_Server implementation still need to loop around chasing for
---      --  pointer changes even with a single pointer.
---
+      E : Entry_Index;
+
+      Prio : System.Any_Priority;
+
+      --  The above fields are those that there may be some hope of packing.
+      --  They are gathered together to allow for compilers that lay records
+      --  out contiguously, to allow for such packing.
+
+      Called_Task : Task_Id;
+      pragma Atomic (Called_Task);
+      --  Use for task entry calls. The value is null if the call record is
+      --  not in use. Conversely, unless State is Done and Onqueue is false,
+      --  Called_Task points to an ATCB.
+      --
+      --  Protection:  Called_Task.L
+
+      Called_PO : System.Address;
+      pragma Atomic (Called_PO);
+      --  Similar to Called_Task but for protected objects
+      --
+      --  Note that the previous implementation tried to merge both
+      --  Called_Task and Called_PO but this ended up in many unexpected
+      --  complications (e.g having to add a magic number in the ATCB, which
+      --  caused gdb lots of confusion) with no real gain since the
+      --  Lock_Server implementation still need to loop around chasing for
+      --  pointer changes even with a single pointer.
+
 --      Acceptor_Prev_Call : Entry_Call_Link;
 --      --  For task entry calls only
 --
@@ -1169,11 +1169,11 @@ package System.Tasking is
 --
 --      Attributes : Attribute_Array := [others => Null_Address];
 --      --  Task attributes
---
---      --  IMPORTANT Note: the Entry_Queues field is last for efficiency of
---      --  access to other fields, do not put new fields after this one.
---
---      Entry_Queues : Task_Entry_Queue_Array (1 .. Entry_Num);
+
+      --  IMPORTANT Note: the Entry_Queues field is last for efficiency of
+      --  access to other fields, do not put new fields after this one.
+
+      Entry_Queues : Task_Entry_Queue_Array (1 .. Entry_Num);
       --  An array of task entry queues
       --
       --  Protection: Self.L. Once a task has set Self.Stage to Completing, it
