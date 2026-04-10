@@ -6,7 +6,7 @@ ExternalProject_Add(espidf_gnat_runtime
     BUILD_IN_SOURCE 1
     BUILD_ALWAYS 1
     CONFIGURE_COMMAND ""
-    BUILD_COMMAND alr build -- -cargs:c
+    BUILD_COMMAND alr build -- -v -cargs:c
         "-D$<JOIN:$<TARGET_PROPERTY:espidf_gnat_runtime_build,INTERFACE_COMPILE_DEFINITIONS>,$<SEMICOLON>-D>"
         "-I$<JOIN:$<TARGET_PROPERTY:espidf_gnat_runtime_build,INTERFACE_INCLUDE_DIRECTORIES>,$<SEMICOLON>-I>"
     COMMAND_EXPAND_LISTS
