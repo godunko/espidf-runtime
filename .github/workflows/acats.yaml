@@ -70,3 +70,13 @@ jobs:
         idf.py set-target esp32s3
         idf.py qemu --qemu-extra-args --no-reboot | tee log
         ../support/report.sh log
+
+    - name: Publish Test Report
+      uses: ctrf-io/github-test-reporter@v1
+      with:
+        report-path: 'test_apps/acats/bundle_1/*.json'
+        github-report: true
+        upload-artifact: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      if: always()
