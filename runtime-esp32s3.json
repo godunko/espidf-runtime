@@ -121,6 +121,7 @@
     "Add_Image_Float": "yes",
     "Add_Image_LL_Fixed": "yes",
     "Add_Image_Util": "yes",
+    "Add_Image_Wide_Char": "yes",
     "Add_IO_Exceptions": "yes",
     "Add_Math_Lib": "hardfloat",
     "Add_Streams": "yes",
