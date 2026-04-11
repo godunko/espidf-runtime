@@ -132,6 +132,7 @@
     "Add_Value_LL_Int": "yes",
     "Add_Value_LL_Spec": "yes",
     "Add_Value_Spec": "yes",
-    "Add_Value_Utils": "yes"
+    "Add_Value_Utils": "yes",
+    "Add_Value_Wide_Char": "yes"
   }
 }
