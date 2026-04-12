@@ -5,7 +5,14 @@ on: push
 jobs:
   build:
     runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/godunko/espidf-alire:main
     steps:
+    - name: Display environment
+      run: |
+        alr settings --global
+        . $IDF_PATH/export.sh
+
     - name: Checkout repo
       uses: actions/checkout@v4
     - name: Checkout GNAT Runtime ACATS Testsuite repo
@@ -30,38 +37,23 @@ jobs:
         ref: gnat-fsf-15
         path: crates/bb-runtimes
 
-    - name: Install Alire
-      uses: alire-project/setup-alire@v5
-    - name: Configure Alire
-      run: |
-        alr settings --global --set dependencies.shared FALSE
-        alr settings --global
-
     - name: Build Xtensa Dynconfig
       run: |
-        alr -C ${{ github.workspace }}/crates/xtensa-dynconfig --non-interactive with --solve
-        alr -C ${{ github.workspace }}/crates/xtensa-dynconfig build
+        alr -C crates/xtensa-dynconfig --non-interactive with --solve
+        alr -C crates/xtensa-dynconfig build
     - name: Build A0B Tools
       run: |
-        alr -C ${{ github.workspace }}/crates/a0b-tools --non-interactive with --solve
-        alr -C ${{ github.workspace }}/crates/a0b-tools build
+        alr -C crates/a0b-tools --non-interactive with --solve
+        alr -C crates/a0b-tools build
     - name: Pin Alire crates and update `bb-runtimes` path
       run: |
         alr toolchain --select gnat_xtensa_esp32_elf
         sed -i 's/bb-runtimes=..\/..\//bb-runtimes=/' alire.toml
         sed -i '/\[\[pins\]\]/q' alire.toml
-        alr pin xtensa_dynconfig --use ${{ github.workspace }}/crates/xtensa-dynconfig
-        alr pin a0b_tools --use ${{ github.workspace }}/crates/a0b-tools
+        alr pin xtensa_dynconfig --use crates/xtensa-dynconfig
+        alr pin a0b_tools --use crates/a0b-tools
         cat alire.toml
         alr --non-interactive with --solve
-    - name: Install ESP-IDF
-      uses: espressif/install-esp-idf-action@v1
-      with:
-        version: "v5.5.4"
-    - name: Install ESP-IDF QEmu
-      run: |
-        ESP_IDF_EXPORT_DEBUG=1
-        python $IDF_PATH/tools/idf_tools.py install esp-rom-elfs qemu-xtensa
 
     - name: Build and Run tests
       run: |
