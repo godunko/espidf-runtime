@@ -3,6 +3,7 @@ if(NOT CONFIG_LIBC_NEWLIB)
 endif()
 
 idf_component_register(REQUIRES cxx freertos)
+target_linker_script(${COMPONENT_LIB} INTERFACE "${CMAKE_CURRENT_LIST_DIR}/discard_gpr_linker_options.ld")
 
 ExternalProject_Add(espidf_gnat_runtime
     PREFIX ${COMPONENT_DIR}
