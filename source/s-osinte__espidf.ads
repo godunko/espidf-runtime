@@ -1,4 +1,6 @@
 
+--  This is ESP-IDF/FreeRTOS version of this package
+
 with Interfaces;
 
 with System.FreeRTOS;
@@ -33,5 +35,14 @@ package System.OS_Interface is
    --  Number of clock ticks per second
    --
    --  ESP/IDF use microsecond unit
+
+   function To_Ticks (D : Duration) return System.FreeRTOS.TickType_t;
+   --  Convert a duration value (in seconds) into FreeRTOS ticks. Negative
+   --  durations are converted to zero. Durations that are too large to be
+   --  represented in the underlying tasking system are converted to the
+   --  maximum representable value (portMAX_DELAY).
+
+   function To_Duration (Ticks : System.FreeRTOS.TickType_t) return Duration;
+   --  Convert FreeRTOS ticks into a duration value (in seconds)
 
 end System.OS_Interface;

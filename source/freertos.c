@@ -1,6 +1,16 @@
 #include <freertos/FreeRTOS.h>
 #include <freertos/semphr.h>
 
+TickType_t __gnat_pdMS_TO_TICKS(unsigned ms)
+{
+  return pdMS_TO_TICKS(ms);
+}
+
+unsigned __gnat_pdTICKS_TO_MS(TickType_t ticks)
+{
+  return pdTICKS_TO_MS(ticks);
+}
+
 SemaphoreHandle_t __gnat_xSemaphoreCreateBinary()
 {
   return xSemaphoreCreateBinary();

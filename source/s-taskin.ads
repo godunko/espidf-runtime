@@ -213,8 +213,8 @@ package System.Tasking is
      (Simple_Call, Conditional_Call, Asynchronous_Call, Timed_Call);
 
 --   type Select_Modes is (Simple_Mode, Else_Mode, Terminate_Mode, Delay_Mode);
---
---   subtype Delay_Modes is Integer;
+
+   subtype Delay_Modes is Integer;
 
    -------------------------------
    -- Entry related definitions --

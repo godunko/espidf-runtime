@@ -8,6 +8,7 @@ with Interfaces.C;
 
 with System.FreeRTOS;
 with System.OS_Interface;
+with System.OS_Primitives;
 with System.Parameters;
 
 package body System.Task_Primitives.Operations is
@@ -15,6 +16,7 @@ package body System.Task_Primitives.Operations is
    use System.FreeRTOS;
    use System.OS_Interface;
    use System.OS_Locks;
+   use System.OS_Primitives;
    use System.Parameters;
    use System.Tasking;
 
@@ -101,14 +103,138 @@ package body System.Task_Primitives.Operations is
 
    function Self return Task_Id renames Specific.Self;
 
+   -----------------
+   -- Timed_Delay --
+   -----------------
+
+   --  This is for use in implementing delay statements, so we assume the
+   --  caller is holding no locks.
+
+   procedure Timed_Delay
+     (Self_ID : Task_Id;
+      Time    : Duration;
+      Mode    : ST.Delay_Modes)
+   is
+      Orig     : constant Duration := Monotonic_Clock;
+      Absolute : Duration;
+      Ticks    : TickType_t;
+      Timedout : Boolean;
+      Aborted  : Boolean := False;
+
+      Result   : BaseType_t;
+
+   begin
+      if Mode = Relative then
+         Absolute := Orig + Time;
+         Ticks    := To_Ticks (Time);
+
+         if Ticks > 0 and then Ticks < portMAX_DELAY then
+
+            --  First tick will delay anytime between 0 and tick period,
+            --  so we need to add one to be on the safe side.
+
+            Ticks := Ticks + 1;
+         end if;
+
+      else
+         Absolute := Time;
+         Ticks    := To_Ticks (Time - Orig);
+      end if;
+
+      if Ticks = System.FreeRTOS.portMAX_DELAY then
+         --  portMAX_DELAY is used to indicate infinite delay, avoid its use.
+
+         Ticks := @ - 1;
+      end if;
+
+      if Ticks > 0 then
+
+         --  Modifying State, locking the TCB
+
+         Result := xSemaphoreTake (Self_ID.Common.LL.L.Mutex, portMAX_DELAY);
+         pragma Assert (Result = pdTRUE);
+
+         Self_ID.Common.State := Delay_Sleep;
+         Timedout := False;
+
+         loop
+            Aborted := Self_ID.Pending_ATC_Level < Self_ID.ATC_Nesting_Level;
+
+            --  Release the TCB before sleeping
+
+            Result := xSemaphoreGive (Self_ID.Common.LL.L.Mutex);
+            pragma Assert (Result = pdTRUE);
+
+            exit when Aborted;
+
+            Result := xSemaphoreTake (Self_ID.Common.LL.CV, Ticks);
+
+            if Result /= pdTRUE then
+
+               --  If Ticks = portMAX_DELAY - 1, it was most probably
+               --  truncated, so make another round after recomputing
+               --  Ticks from absolute time.
+
+               if Ticks /= System.FreeRTOS.portMAX_DELAY - 1 then
+                  Timedout := True;
+
+               else
+                  declare
+                     D : constant Duration := Absolute - Monotonic_Clock;
+
+                  begin
+                     if D < 0.0 and then To_Ticks (abs D) > 0 then
+                        Timedout := True;
+
+                     else
+                        Ticks := To_Ticks (Absolute - Monotonic_Clock);
+
+                        if Ticks < portMAX_DELAY - 1 then
+
+                           --  First tick will delay anytime between 0 and
+                           --  tick period, so we need to add one to be on the
+                           --  safe side.
+
+                           Ticks := @ + 1;
+
+                        elsif Ticks = System.FreeRTOS.portMAX_DELAY then
+                           --  portMAX_DELAY is used to indicate infinite
+                           --  delay, avoid its use.
+
+                           Ticks := @ - 1;
+                        end if;
+                     end if;
+                  end;
+               end if;
+            end if;
+
+            --  Take back the lock after having slept, to protect further
+            --  access to Self_ID.
+
+            Result :=
+              xSemaphoreTake (Self_ID.Common.LL.L.Mutex, portMAX_DELAY);
+            pragma Assert (Result = pdTRUE);
+
+            exit when Timedout;
+         end loop;
+
+         Self_ID.Common.State := Runnable;
+
+         Result := xSemaphoreGive (Self_ID.Common.LL.L.Mutex);
+         pragma Assert (Result = pdTRUE);
+
+      else
+         vTaskDelay (0);
+      end if;
+   end Timed_Delay;
+
    ---------------------
    -- Monotonic_Clock --
    ---------------------
 
    function Monotonic_Clock return Duration is
    begin
-      raise Program_Error;
-      return 0.0;
+      return To_Duration (xTaskGetTickCount);
    end Monotonic_Clock;
 
    --------------------

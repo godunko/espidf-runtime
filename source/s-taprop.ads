@@ -384,13 +384,13 @@ package System.Task_Primitives.Operations is
 --      Timedout : out Boolean;
 --      Yielded  : out Boolean);
 --   --  Combination of Sleep (above) and Timed_Delay
---
---   procedure Timed_Delay
---     (Self_ID : ST.Task_Id;
---      Time    : Duration;
---      Mode    : ST.Delay_Modes);
---   --  Implement the semantics of the delay statement.
---   --  The caller should be abort-deferred and should not hold any locks.
+
+   procedure Timed_Delay
+     (Self_ID : ST.Task_Id;
+      Time    : Duration;
+      Mode    : ST.Delay_Modes);
+   --  Implement the semantics of the delay statement.
+   --  The caller should be abort-deferred and should not hold any locks.
 
    procedure Wakeup
      (T      : ST.Task_Id;

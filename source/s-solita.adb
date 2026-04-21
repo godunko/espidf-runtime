@@ -37,7 +37,7 @@ pragma Style_Checks (All_Checks);
 --  with Ada.Exceptions.Is_Null_Occurrence;
 --
 with System.Task_Primitives.Operations;
---  with System.Tasking;
+with System.Tasking;
 --  with System.Stack_Checking;
 --  with System.Secondary_Stack;
 
@@ -73,8 +73,8 @@ package body System.Soft_Links.Tasking is
    procedure Set_Sec_Stack (Stack : SST.SS_Stack_Ptr);
    --  Get/Set location of current task's secondary stack
 
---   procedure Timed_Delay_T (Time : Duration; Mode : Integer);
---   --  Task-safe version of SSL.Timed_Delay
+   procedure Timed_Delay_T (Time : Duration; Mode : Integer);
+   --  Task-safe version of SSL.Timed_Delay
 
    procedure Task_Termination_Handler_T  (Excep : SSL.EO);
    --  Task-safe version of the task termination procedure
@@ -119,28 +119,28 @@ package body System.Soft_Links.Tasking is
       STPO.Self.Common.Compiler_Data.Sec_Stack_Ptr := Stack;
    end Set_Sec_Stack;
 
---   -------------------
---   -- Timed_Delay_T --
---   -------------------
---
---   procedure Timed_Delay_T (Time : Duration; Mode : Integer) is
---      Self_Id : constant System.Tasking.Task_Id := STPO.Self;
---
---   begin
---      --  In case pragma Detect_Blocking is active then Program_Error
---      --  must be raised if this potentially blocking operation
---      --  is called from a protected operation.
---
---      if System.Tasking.Detect_Blocking
---        and then Self_Id.Common.Protected_Action_Nesting > 0
---      then
---         raise Program_Error with "potentially blocking operation";
---      else
---         Abort_Defer.all;
---         STPO.Timed_Delay (Self_Id, Time, Mode);
---         Abort_Undefer.all;
---      end if;
---   end Timed_Delay_T;
+   -------------------
+   -- Timed_Delay_T --
+   -------------------
+
+   procedure Timed_Delay_T (Time : Duration; Mode : Integer) is
+      Self_Id : constant System.Tasking.Task_Id := STPO.Self;
+
+   begin
+      --  In case pragma Detect_Blocking is active then Program_Error
+      --  must be raised if this potentially blocking operation
+      --  is called from a protected operation.
+
+      if System.Tasking.Detect_Blocking
+        and then Self_Id.Common.Protected_Action_Nesting > 0
+      then
+         raise Program_Error with "potentially blocking operation";
+      else
+         Abort_Defer.all;
+         STPO.Timed_Delay (Self_Id, Time, Mode);
+         Abort_Undefer.all;
+      end if;
+   end Timed_Delay_T;
 
    --------------------------------
    -- Task_Termination_Handler_T --
@@ -222,7 +222,7 @@ package body System.Soft_Links.Tasking is
          SSL.Get_Sec_Stack            := Get_Sec_Stack'Access;
 --         SSL.Get_Stack_Info           := Get_Stack_Info'Access;
          SSL.Set_Sec_Stack            := Set_Sec_Stack'Access;
---         SSL.Timed_Delay              := Timed_Delay_T'Access;
+         SSL.Timed_Delay              := Timed_Delay_T'Access;
          SSL.Task_Termination_Handler := Task_Termination_Handler_T'Access;
 
          --  No need to create a new secondary stack, since we will use the

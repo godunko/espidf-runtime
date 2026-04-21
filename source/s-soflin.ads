@@ -99,11 +99,11 @@ package System.Soft_Links is
 --   type Special_EO_Call   is access
 --     procedure (Excep : EO := Current_Target_Exception);
 --   pragma Favor_Top_Level (Special_EO_Call);
---
---   type Timed_Delay_Call  is access
---     procedure (Time : Duration; Mode : Integer);
---   pragma Favor_Top_Level (Timed_Delay_Call);
---
+
+   type Timed_Delay_Call  is access
+     procedure (Time : Duration; Mode : Integer);
+   pragma Favor_Top_Level (Timed_Delay_Call);
+
 --   type Get_Stack_Access_Call is access
 --     function return Stack_Checking.Stack_Access;
 --   pragma Favor_Top_Level (Get_Stack_Access_Call);
@@ -127,7 +127,7 @@ package System.Soft_Links is
 --   pragma Suppress (Access_Check, Set_EOA_Call);
    pragma Suppress (Access_Check, Get_Stack_Call);
    pragma Suppress (Access_Check, Set_Stack_Call);
---   pragma Suppress (Access_Check, Timed_Delay_Call);
+   pragma Suppress (Access_Check, Timed_Delay_Call);
 --   pragma Suppress (Access_Check, Get_Stack_Access_Call);
 --   pragma Suppress (Access_Check, Task_Name_Call);
 
@@ -282,16 +282,16 @@ package System.Soft_Links is
 --   Current_Master  : Get_Integer_Call := Current_Master_NT'Access;
 --   Enter_Master    : No_Param_Proc    := Enter_Master_NT'Access;
 --   Complete_Master : No_Param_Proc    := Complete_Master_NT'Access;
---
---   ----------------------
---   -- Delay Soft-Links --
---   ----------------------
---
---   --  Soft-Links are used for procedures that manipulate time to avoid
---   --  dragging the tasking run time when using delay statements.
---
---   Timed_Delay : Timed_Delay_Call;
---
+
+   ----------------------
+   -- Delay Soft-Links --
+   ----------------------
+
+   --  Soft-Links are used for procedures that manipulate time to avoid
+   --  dragging the tasking run time when using delay statements.
+
+   Timed_Delay : Timed_Delay_Call;
+
 --   --------------------------
 --   -- Task Name Soft-Links --
 --   --------------------------
