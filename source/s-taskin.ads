@@ -1033,11 +1033,11 @@ package System.Tasking is
       --  not write this field until the master is complete, the
       --  synchronization should be adequate to prevent races.
 
---      Alive_Count : Natural := 0;
---      --  Number of tasks directly dependent on this task (including itself)
---      --  that are still "alive", i.e. not terminated.
---      --
---      --  Protection: Self.L
+      Alive_Count : Natural := 0;
+      --  Number of tasks directly dependent on this task (including itself)
+      --  that are still "alive", i.e. not terminated.
+      --
+      --  Protection: Self.L
 
       Awake_Count : Natural := 0;
       --  Number of tasks directly dependent on this task (including itself)

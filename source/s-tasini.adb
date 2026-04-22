@@ -394,8 +394,8 @@ package body System.Tasking.Initialization is
       end loop;
 
       Self_Id.Awake_Count := 1;
---      Self_Id.Alive_Count := 1;
---
+      Self_Id.Alive_Count := 1;
+
 --      --  Normally, a task starts out with internal master nesting level one
 --      --  larger than external master nesting level. It is incremented to one
 --      --  by Enter_Master, which is called in the task body only if the
