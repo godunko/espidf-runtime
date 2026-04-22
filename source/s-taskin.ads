@@ -1101,12 +1101,12 @@ package System.Tasking is
       --  Do_Pending_Action, which is called by Undefer_Abort. It should only
       --  be set to True by Set_Priority and Abort_To_Level.
 
---      Pending_Priority_Change : Boolean := False;
---      --  Flag to indicate pending priority change (for dynamic priorities
---      --  package). The base priority is updated on the next abort
---      --  completion point (aka. synchronization point).
---      --
---      --  Protection: Self.L
+      Pending_Priority_Change : Boolean := False;
+      --  Flag to indicate pending priority change (for dynamic priorities
+      --  package). The base priority is updated on the next abort
+      --  completion point (aka. synchronization point).
+      --
+      --  Protection: Self.L
 
       Terminate_Alternative : Boolean := False;
       --  Task is accepting Select with Terminate Alternative
