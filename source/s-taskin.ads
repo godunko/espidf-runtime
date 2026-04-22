@@ -882,8 +882,8 @@ package System.Tasking is
       --  lock of Called_Target if the call is on the queue of a task. See
       --  comments on type declaration for more details.
 
---      Uninterpreted_Data : System.Address;
---      --  Data passed by the compiler
+      Uninterpreted_Data : System.Address;
+      --  Data passed by the compiler
 
       Exception_To_Raise : Ada.Exceptions.Exception_Id;
       --  The exception to raise once this call has been completed without
