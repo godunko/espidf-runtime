@@ -271,14 +271,14 @@ package body System.Soft_Links is
       null;
    end Task_Lock_NT;
 
---   ------------------
---   -- Task_Name_NT --
---   -------------------
---
---   function Task_Name_NT return String is
---   begin
---      return "main_task";
---   end Task_Name_NT;
+   ------------------
+   -- Task_Name_NT --
+   -------------------
+
+   function Task_Name_NT return String is
+   begin
+      return "main_task";
+   end Task_Name_NT;
 
    -------------------------
    -- Task_Termination_NT --

@@ -87,8 +87,8 @@ package body System.Tasking.Initialization is
    function Get_Current_Excep return SSL.EOA;
    --  Task-safe version of SSL.Get_Current_Excep
 
---   function Task_Name return String;
---   --  Returns current task's name
+   function Task_Name return String;
+   --  Returns current task's name
 
    procedure Initialize_RTS_Lock (Addr : Address);
    --  Initialize the RTS lock at Addr
@@ -422,7 +422,7 @@ package body System.Tasking.Initialization is
       SSL.Lock_Task          := Task_Lock'Access;
       SSL.Unlock_Task        := Task_Unlock'Access;
 --      SSL.Check_Abort_Status := Check_Abort_Status'Access;
---      SSL.Task_Name          := Task_Name'Access;
+      SSL.Task_Name          := Task_Name'Access;
       SSL.Get_Current_Excep  := Get_Current_Excep'Access;
 
       --  Initialize the tasking soft links (if not done yet) that are common
@@ -644,15 +644,15 @@ package body System.Tasking.Initialization is
       Task_Lock (STPO.Self);
    end Task_Lock;
 
---   ---------------
---   -- Task_Name --
---   ---------------
---
---   function Task_Name return String is
---      Self_Id : constant Task_Id := STPO.Self;
---   begin
---      return Self_Id.Common.Task_Image (1 .. Self_Id.Common.Task_Image_Len);
---   end Task_Name;
+   ---------------
+   -- Task_Name --
+   ---------------
+
+   function Task_Name return String is
+      Self_Id : constant Task_Id := STPO.Self;
+   begin
+      return Self_Id.Common.Task_Image (1 .. Self_Id.Common.Task_Image_Len);
+   end Task_Name;
 
    -----------------
    -- Task_Unlock --

@@ -107,10 +107,10 @@ package System.Soft_Links is
 --   type Get_Stack_Access_Call is access
 --     function return Stack_Checking.Stack_Access;
 --   pragma Favor_Top_Level (Get_Stack_Access_Call);
---
---   type Task_Name_Call is access
---     function return String;
---   pragma Favor_Top_Level (Task_Name_Call);
+
+   type Task_Name_Call is access
+     function return String;
+   pragma Favor_Top_Level (Task_Name_Call);
 
    --  Suppress checks on all these types, since we know the corresponding
    --  values can never be null (the soft links are always initialized).
@@ -129,7 +129,7 @@ package System.Soft_Links is
    pragma Suppress (Access_Check, Set_Stack_Call);
    pragma Suppress (Access_Check, Timed_Delay_Call);
 --   pragma Suppress (Access_Check, Get_Stack_Access_Call);
---   pragma Suppress (Access_Check, Task_Name_Call);
+   pragma Suppress (Access_Check, Task_Name_Call);
 
    --  The following one is not related to tasking/no-tasking but to the
    --  traceback decorators for exceptions.
@@ -292,13 +292,13 @@ package System.Soft_Links is
 
    Timed_Delay : Timed_Delay_Call;
 
---   --------------------------
---   -- Task Name Soft-Links --
---   --------------------------
---
---   function Task_Name_NT return String;
---
---   Task_Name : Task_Name_Call := Task_Name_NT'Access;
+   --------------------------
+   -- Task Name Soft-Links --
+   --------------------------
+
+   function Task_Name_NT return String;
+
+   Task_Name : Task_Name_Call := Task_Name_NT'Access;
 
    -------------------------------------
    -- Exception Tracebacks Soft-Links --
