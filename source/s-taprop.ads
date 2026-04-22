@@ -34,7 +34,7 @@
 
 --  with System.OS_Interface;
 with System.OS_Locks;
---  with System.Parameters;
+with System.Parameters;
 with System.Tasking;
 
 package System.Task_Primitives.Operations is
@@ -48,13 +48,13 @@ package System.Task_Primitives.Operations is
    --  operation of the tasking run-time. This must be called once, before any
    --  other subprograms of this package are called.
 
---   procedure Create_Task
---     (T          : ST.Task_Id;
---      Wrapper    : System.Address;
---      Stack_Size : System.Parameters.Size_Type;
---      Priority   : System.Any_Priority;
---      Succeeded  : out Boolean);
---   pragma Inline (Create_Task);
+   procedure Create_Task
+     (T          : ST.Task_Id;
+      Wrapper    : System.Address;
+      Stack_Size : System.Parameters.Size_Type;
+      Priority   : System.Any_Priority;
+      Succeeded  : out Boolean);
+   pragma Inline (Create_Task);
    --  Create a new low-level task with ST.Task_Id T and place other needed
    --  information in the ATCB.
    --

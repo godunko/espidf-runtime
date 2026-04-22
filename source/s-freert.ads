@@ -4,6 +4,10 @@ with Interfaces.C;
 package System.FreeRTOS is
    pragma Preelaborate;
 
+   subtype char     is Interfaces.C.char;
+   subtype uint32_t is Interfaces.Unsigned_32;
+   subtype size_t   is Interfaces.C.size_t;
+
    type BaseType_t is new Interfaces.C.int;
 
    pdFALSE : constant BaseType_t := 0;
@@ -11,9 +15,11 @@ package System.FreeRTOS is
 
    type UBaseType_t is new Interfaces.C.unsigned;
 
-   type TickType_t is new Interfaces.Unsigned_32;
+   type TickType_t is new uint32_t;
 
    portMAX_DELAY : constant TickType_t := TickType_t'Last;
+
+   type configSTACK_DEPTH_TYPE is new uint32_t;
 
    configMAX_PRIORITIES : constant := 25;
 
@@ -38,6 +44,18 @@ package System.FreeRTOS is
    type TaskHandle_t is private;
 
    Null_TaskHandle_t : constant TaskHandle_t;
+
+   type TaskFunction_t is access procedure (arg : System.Address)
+     with Convention => C;
+
+   function xTaskCreate
+     (pvTaskCode    : TaskFunction_t;
+      pcName        : access constant char;
+      uxStackDepth  : configSTACK_DEPTH_TYPE;
+      pvParameters  : System.Address;
+      uxPriority    : UBaseType_t;
+      pxCreatedTask : out TaskHandle_t) return BaseType_t
+     with Import, Convention => C, External_Name => "__gnat_xTaskCreate";
 
    procedure vTaskDelete (xTask : TaskHandle_t)
      with Import, Convention => C, External_Name => "vTaskDelete";

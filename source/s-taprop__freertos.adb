@@ -4,12 +4,12 @@
 --  This package contains all the GNULL primitives that interface directly with
 --  the underlying OS.
 
+with Ada.Unchecked_Conversion;
 with Interfaces.C;
 
 with System.FreeRTOS;
 with System.OS_Interface;
 with System.OS_Primitives;
-with System.Parameters;
 with System.Soft_Links;
 
 package body System.Task_Primitives.Operations is
@@ -107,6 +107,12 @@ package body System.Task_Primitives.Operations is
    function Is_Task_Context return Boolean;
    --  This function returns True if the current execution is in the context of
    --  a task, and False if it is an interrupt context.
+
+   function To_Address is
+     new Ada.Unchecked_Conversion (Task_Id, System.Address);
+
+   function To_TaskFunction_t is
+     new Ada.Unchecked_Conversion (System.Address, TaskFunction_t);
 
    ----------
    -- Self --
@@ -293,6 +299,92 @@ package body System.Task_Primitives.Operations is
          Initialize_Lock (Self_ID.Common.LL.L'Access, ATCB_Level);
       end if;
    end Initialize_TCB;
+
+   -----------------
+   -- Create_Task --
+   -----------------
+
+   procedure Create_Task
+     (T          : Task_Id;
+      Wrapper    : System.Address;
+      Stack_Size : System.Parameters.Size_Type;
+      Priority   : System.Any_Priority;
+      Succeeded  : out Boolean)
+   is
+--      use type System.Multiprocessors.CPU_Range;
+
+      Result : BaseType_t;
+
+   begin
+--      --  Check whether both Dispatching_Domain and CPU are specified for
+--      --  the task, and the CPU value is not contained within the range of
+--      --  processors for the domain.
+--
+--      if T.Common.Domain /= null
+--        and then T.Common.Base_CPU /= System.Multiprocessors
+--  .Not_A_Specific_CPU
+--        and then
+--          (T.Common.Base_CPU not in T.Common.Domain'Range
+--            or else not T.Common.Domain (T.Common.Base_CPU))
+--      then
+--         Succeeded := False;
+--         return;
+--      end if;
+
+      --  Since the initial signal mask of a thread is inherited from the
+      --  creator, and the Environment task has all its signals masked, we do
+      --  not need to manipulate caller's signal mask at this point. All tasks
+      --  in RTS will have All_Tasks_Mask initially.
+
+      --  We now compute the FreeRTOS task name, then spawn ...
+
+      declare
+         Name : aliased Interfaces.C.char_array
+           (1 .. size_t (T.Common.Task_Image_Len + 1));
+         --  Task name we are going to hand down to FreeRTOS
+
+      begin
+         for J in Name'Range loop
+            Name (J) := char (T.Common.Task_Image (Integer (J)));
+         end loop;
+
+         Name (Name'Last) := Interfaces.C.nul;
+
+         --  Now create the FreeRTOS task
+
+         Result :=
+           xTaskCreate
+             (pvTaskCode    => To_TaskFunction_t (Wrapper),
+              pcName        => Name (1)'Access,
+              uxStackDepth  => configSTACK_DEPTH_TYPE (Stack_Size),
+              pvParameters  => To_Address (T),
+              uxPriority    => To_FreeRTOS_Priority (Priority),
+              pxCreatedTask => T.Common.LL.Thread);
+         --  Note, ESP-IDF's `xTaskCreate` expects stack size in bytes, not
+         --  words as vanilla FreeRTOS.
+
+         if Result = pdTRUE then
+            Succeeded := True;
+--            Task_Creation_Hook (T.Common.LL.Thread);
+
+         else
+            Succeeded := False;
+         end if;
+      end;
+
+--      --  Set processor affinity
+--
+--      Set_Task_Affinity (T);
+--
+      --  Only case of failure is if taskSpawn returned 0 (aka Null_Thread_Id)
+--
+--      if T.Common.LL.Thread = Null_Thread_Id then
+--         Succeeded := False;
+--      else
+--         Succeeded := True;
+--         Task_Creation_Hook (T.Common.LL.Thread);
+--      end if;
+   end Create_Task;
 
    ----------------
    -- Abort_Task --

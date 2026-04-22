@@ -50,3 +50,8 @@ BaseType_t __gnat_xSemaphoreTakeRecursive(SemaphoreHandle_t xSemaphore, TickType
 {
   return xSemaphoreTakeRecursive(xSemaphore, xTicksToWait);
 }
+
+BaseType_t __gnat_xTaskCreate(TaskFunction_t pvTaskCode, const char * const pcName, const configSTACK_DEPTH_TYPE uxStackDepth, void *pvParameters, UBaseType_t uxPriority, TaskHandle_t *pxCreatedTask)
+{
+  return xTaskCreate(pvTaskCode, pcName, uxStackDepth, pvParameters, uxPriority, pxCreatedTask);
+}
