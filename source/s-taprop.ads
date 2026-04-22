@@ -300,8 +300,8 @@ package System.Task_Primitives.Operations is
    --  read or write permission. (That is, matching pairs of Lock and Unlock
    --  operations on each lock object must be properly nested.)
 
---   procedure Yield (Do_Yield : Boolean := True);
---   pragma Inline (Yield);
+   procedure Yield (Do_Yield : Boolean := True);
+   pragma Inline (Yield);
    --  Yield the processor. Add the calling task to the tail of the ready queue
    --  for its active_priority. On most platforms, Yield is a no-op if Do_Yield
    --  is False. But on some platforms (notably VxWorks), Do_Yield is ignored.

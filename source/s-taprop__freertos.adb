@@ -866,6 +866,16 @@ package body System.Task_Primitives.Operations is
       pragma Assert (Result = pdTRUE);
    end Wakeup;
 
+   -----------
+   -- Yield --
+   -----------
+
+   procedure Yield (Do_Yield : Boolean := True) is
+      pragma Unreferenced (Do_Yield);
+   begin
+      vTaskDelay (0);
+   end Yield;
+
    ------------------
    -- Set_Priority --
    ------------------
