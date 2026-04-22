@@ -1038,15 +1038,15 @@ package System.Tasking is
 --      --  that are still "alive", i.e. not terminated.
 --      --
 --      --  Protection: Self.L
---
---      Awake_Count : Natural := 0;
---      --  Number of tasks directly dependent on this task (including itself)
---      --  still "awake", i.e., are not terminated and not waiting on a
---      --  terminate alternative.
---      --
---      --  Invariant: Awake_Count <= Alive_Count
---
---      --  Protection: Self.L
+
+      Awake_Count : Natural := 0;
+      --  Number of tasks directly dependent on this task (including itself)
+      --  still "awake", i.e., are not terminated and not waiting on a
+      --  terminate alternative.
+      --
+      --  Invariant: Awake_Count <= Alive_Count
+
+      --  Protection: Self.L
 
       --  Beginning of flags
 

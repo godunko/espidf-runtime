@@ -393,7 +393,7 @@ package body System.Tasking.Initialization is
          Self_Id.Entry_Calls (L).Level := L;
       end loop;
 
---      Self_Id.Awake_Count := 1;
+      Self_Id.Awake_Count := 1;
 --      Self_Id.Alive_Count := 1;
 --
 --      --  Normally, a task starts out with internal master nesting level one
