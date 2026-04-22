@@ -332,9 +332,9 @@ package System.Task_Primitives.Operations is
 
    --    pragma Task_Dispatching_Policy (FIFO_Within_Priorities);
 
---   function Get_Priority (T : ST.Task_Id) return System.Any_Priority;
---   pragma Inline (Get_Priority);
---   --  Returns the priority last set by Set_Priority for this task
+   function Get_Priority (T : ST.Task_Id) return System.Any_Priority;
+   pragma Inline (Get_Priority);
+   --  Returns the priority last set by Set_Priority for this task
 
    function Monotonic_Clock return Duration;
    pragma Inline (Monotonic_Clock);

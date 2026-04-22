@@ -789,6 +789,15 @@ package body System.Task_Primitives.Operations is
       T.Common.Current_Priority := Prio;
    end Set_Priority;
 
+   ------------------
+   -- Get_Priority --
+   ------------------
+
+   function Get_Priority (T : Task_Id) return System.Any_Priority is
+   begin
+      return T.Common.Current_Priority;
+   end Get_Priority;
+
    ----------------
    -- Enter_Task --
    ----------------
