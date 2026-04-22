@@ -586,7 +586,7 @@ package System.Tasking is
       --  Protection: This is used only by the GNULLI implementation, which
       --  takes care of all of its synchronization.
 
---      Task_Arg : System.Address;
+      Task_Arg : System.Address;
       --  The argument to task procedure. Provide a handle for discriminant
       --  information.
       --
