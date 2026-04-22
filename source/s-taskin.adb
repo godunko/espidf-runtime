@@ -162,9 +162,9 @@ package body System.Tasking is
 --      end if;
 --
 --      --  Link the task into the list of all tasks
---
---      T.Common.All_Tasks_Link := All_Tasks_List;
---      All_Tasks_List := T;
+
+      T.Common.All_Tasks_Link := All_Tasks_List;
+      All_Tasks_List := T;
    end Initialize_ATCB;
 
    ----------------

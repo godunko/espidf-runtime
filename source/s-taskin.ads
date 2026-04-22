@@ -613,11 +613,11 @@ package System.Tasking is
       --
       --  Protection: Only accessed by Self
 
---      All_Tasks_Link : Task_Id;
---      --  Used to link this task to the list of all tasks in the system
---      --
---      --  Protection: RTS_Lock
---
+      All_Tasks_Link : Task_Id;
+      --  Used to link this task to the list of all tasks in the system
+      --
+      --  Protection: RTS_Lock
+
 --      Activation_Link : Task_Id;
 --      --  Used to link this task to a list of tasks to be activated
 --      --
@@ -743,14 +743,14 @@ package System.Tasking is
 --   --  This task ID is declared here to break circular dependencies.
 --   --  Also declare Interrupt_Manager_ID after Task_Id is known, to avoid
 --   --  generating unneeded finalization code.
---
---   -----------------------
---   -- List of all Tasks --
---   -----------------------
---
---   All_Tasks_List : Task_Id;
---   --  Global linked list of all tasks
---
+
+   -----------------------
+   -- List of all Tasks --
+   -----------------------
+
+   All_Tasks_List : Task_Id;
+   --  Global linked list of all tasks
+
 --   ------------------------------------------
 --   -- Regular (non restricted) definitions --
 --   ------------------------------------------
