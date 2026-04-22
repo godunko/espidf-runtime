@@ -775,10 +775,10 @@ package System.Tasking is
 --   Foreign_Task_Level     : constant Master_Level := 0;
    Environment_Task_Level : constant Master_Level := 1;
 --   Independent_Task_Level : constant Master_Level := 2;
---   Library_Task_Level     : constant Master_Level := 3;
---   --  Note that the value of Library_Task_Level is also hard coded in the
---   --  compiler, see Rtsfind.Library_Task_Level. The two should be kept in
---   --  sync.
+   Library_Task_Level     : constant Master_Level := 3;
+   --  Note that the value of Library_Task_Level is also hard coded in the
+   --  compiler, see Rtsfind.Library_Task_Level. The two should be kept in
+   --  sync.
 
    -------------------
    -- Priority info --
@@ -1024,7 +1024,7 @@ package System.Tasking is
       --  Protection: Set by Activator before Self is activated, and read
       --  after Self is activated.
 
---      Master_Within : Master_Level;
+      Master_Within : Master_Level;
       --  The ID of the master currently executing within this task; that is,
       --  the most deeply nested currently active master.
       --

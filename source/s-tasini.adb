@@ -386,7 +386,7 @@ package body System.Tasking.Initialization is
 
       Self_Id := Environment_Task;
       Self_Id.Master_Of_Task := Environment_Task_Level;
---      Self_Id.Master_Within := Self_Id.Master_Of_Task + 1;
+      Self_Id.Master_Within := Self_Id.Master_Of_Task + 1;
 
       for L in Self_Id.Entry_Calls'Range loop
          Self_Id.Entry_Calls (L).Self := Self_Id;
@@ -396,16 +396,16 @@ package body System.Tasking.Initialization is
       Self_Id.Awake_Count := 1;
       Self_Id.Alive_Count := 1;
 
---      --  Normally, a task starts out with internal master nesting level one
---      --  larger than external master nesting level. It is incremented to one
---      --  by Enter_Master, which is called in the task body only if the
---      --  compiler thinks the task may have dependent tasks. There is no
---      --  corresponding call to Enter_Master for the environment task, so we
---      --  would need to increment it to 2 here. Instead, we set it to 3. By
---      --  doing this we reserve the level 2 for server tasks of the runtime
---      --  system. The environment task does not need to wait for these server
---
---      Self_Id.Master_Within := Library_Task_Level;
+      --  Normally, a task starts out with internal master nesting level one
+      --  larger than external master nesting level. It is incremented to one
+      --  by Enter_Master, which is called in the task body only if the
+      --  compiler thinks the task may have dependent tasks. There is no
+      --  corresponding call to Enter_Master for the environment task, so we
+      --  would need to increment it to 2 here. Instead, we set it to 3. By
+      --  doing this we reserve the level 2 for server tasks of the runtime
+      --  system. The environment task does not need to wait for these server
+
+      Self_Id.Master_Within := Library_Task_Level;
 
       --  Initialize lock used to implement mutual exclusion between all tasks
 
