@@ -110,7 +110,7 @@ package body System.Tasking is
       --  would be illegal, because Common_ATCB is limited because
       --  Task_Primitives.Private_Data is limited.
 
---      T.Common.Parent := Parent;
+      T.Common.Parent := Parent;
       T.Common.Base_Priority := Base_Priority;
 --      T.Common.CPU_Is_Explicit := CPU_Is_Explicit;
 --      T.Common.Base_CPU := Base_CPU;
@@ -144,7 +144,7 @@ package body System.Tasking is
 --      T.Common.Debug_Events             := [others => False];
       T.Common.Task_Image_Len           := 0;
 
---      if T.Common.Parent = null then
+      if T.Common.Parent = null then
 
          --  For the environment task, the adjusted stack size is meaningless.
          --  For example, an unspecified Stack_Size means that the stack size
@@ -152,16 +152,18 @@ package body System.Tasking is
          --  Stack_Checking algorithm therefore needs to use the requested
          --  size, or 0 in case of an unknown size.
 
+         null;
 --         T.Common.Compiler_Data.Pri_Stack_Info.Size :=
 --            Storage_Elements.Storage_Offset (Stack_Size);
---
---      else
+
+      else
+         null;
 --         T.Common.Compiler_Data.Pri_Stack_Info.Size :=
 --           Storage_Elements.Storage_Offset
 --             (Parameters.Adjust_Storage_Size (Stack_Size));
---      end if;
---
---      --  Link the task into the list of all tasks
+      end if;
+
+      --  Link the task into the list of all tasks
 
       T.Common.All_Tasks_Link := All_Tasks_List;
       All_Tasks_List := T;

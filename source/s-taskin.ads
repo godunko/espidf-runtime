@@ -508,9 +508,9 @@ package System.Tasking is
       --
       --  Protection: Self.L
 
---      Parent : Task_Id;
---      --  The task on which this task depends.
---      --  See also Master_Level and Master_Within.
+      Parent : Task_Id;
+      --  The task on which this task depends.
+      --  See also Master_Level and Master_Within.
 
       Base_Priority : System.Any_Priority;
       --  Base priority, not changed during entry calls, only changed
