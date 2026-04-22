@@ -20,6 +20,7 @@ package System.Task_Primitives is
    --  A component of this type is guaranteed to be included in the
    --  Ada_Task_Control_Block.
 
+   subtype Task_Address is System.Address;
    Task_Address_Size : constant := Standard'Address_Size;
    --  Type used for task addresses and its size
 

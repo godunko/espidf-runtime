@@ -91,10 +91,17 @@
       "s-reldel.ads": { "crate": "bb_runtimes", "path": "gnat_rts_sources/include/rts-sources/gnarl/full/extended/s-reldel.ads" },
       "s-taprob.adb": { "crate": "espidf_gnat_runtime", "path": "source/gcc-15/libgnarl/s-taprob.adb" },
       "s-taprob.ads": { "crate": "espidf_gnat_runtime", "path": "source/gcc-15/libgnarl/s-taprob.ads" },
+      "a-taside.adb": { "crate": "espidf_gnat_runtime", "path": "source/gcc-15/libgnarl/a-taside.adb" },
+      "a-taside.ads": { "crate": "espidf_gnat_runtime", "path": "source/gcc-15/libgnarl/a-taside.ads" },
       "s-tasque.adb": { "crate": "espidf_gnat_runtime", "path": "source/gcc-15/libgnarl/s-tasque.adb" },
       "s-tasque.ads": { "crate": "espidf_gnat_runtime", "path": "source/gcc-15/libgnarl/s-tasque.ads" },
+      "s-tasuti.adb": { "crate": "espidf_gnat_runtime", "path": "source/s-tasuti.adb" },
+      "s-tasuti.ads": { "crate": "espidf_gnat_runtime", "path": "source/s-tasuti.ads" },
       "s-tpoben.adb": { "crate": "espidf_gnat_runtime", "path": "source/gcc-15/libgnarl/s-tpoben.adb" },
       "s-tpoben.ads": { "crate": "espidf_gnat_runtime", "path": "source/gcc-15/libgnarl/s-tpoben.ads" },
+
+//      "a-sytaco.adb": { "crate": "espidf_gnat_runtime", "path": "source/gcc-15/libgnarl/a-sytaco.adb" },
+//      "a-sytaco.ads": { "crate": "espidf_gnat_runtime", "path": "source/gcc-15/libgnarl/a-sytaco.ads" },
     }
   },
 
