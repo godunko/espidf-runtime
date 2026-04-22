@@ -789,11 +789,11 @@ package System.Tasking is
    --  -1 rather than System.Priority'First - 1 as the value needs to be used
    --  in init.c to specify that the main task has no specified priority.
 
---   Priority_Not_Boosted : constant Integer := System.Priority'First - 1;
---   --  Definition of Priority actually has to come from the RTS configuration
---
---   subtype Rendezvous_Priority is Integer
---     range Priority_Not_Boosted .. System.Any_Priority'Last;
+   Priority_Not_Boosted : constant Integer := System.Priority'First - 1;
+   --  Definition of Priority actually has to come from the RTS configuration
+
+   subtype Rendezvous_Priority is Integer
+     range Priority_Not_Boosted .. System.Any_Priority'Last;
 
    -------------------
    -- Affinity info --
@@ -930,7 +930,7 @@ package System.Tasking is
       Acceptor_Prev_Call : Entry_Call_Link;
       --  For task entry calls only
 
---      Acceptor_Prev_Priority : Rendezvous_Priority := Priority_Not_Boosted;
+      Acceptor_Prev_Priority : Rendezvous_Priority := Priority_Not_Boosted;
       --  For task entry calls only. The priority of the most recent prior
       --  call being serviced. For protected entry calls, this function should
       --  be performed by GNULLI ceiling locking.
