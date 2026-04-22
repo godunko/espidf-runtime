@@ -1007,7 +1007,7 @@ package System.Tasking is
       --
       --  Protection: Self.L
 
---      Chosen_Index : Select_Index;
+      Chosen_Index : Select_Index;
       --  The index in Open_Accepts of the entry call accepted by a selective
       --  wait executed by this task.
       --
