@@ -341,15 +341,15 @@ package System.Tasking is
 --      --  being aborted.
 --   end record;
 --   pragma Suppress_Initialization (Restricted_Entry_Call_Record);
---
---   -------------------------------------------
---   -- Task termination procedure definition --
---   -------------------------------------------
---
---   --  We need to redefine here these types (already defined in
---   --  Ada.Task_Termination) for avoiding circular dependencies.
---
---   type Cause_Of_Termination is (Normal, Abnormal, Unhandled_Exception);
+
+   -------------------------------------------
+   -- Task termination procedure definition --
+   -------------------------------------------
+
+   --  We need to redefine here these types (already defined in
+   --  Ada.Task_Termination) for avoiding circular dependencies.
+
+   type Cause_Of_Termination is (Normal, Abnormal, Unhandled_Exception);
    --  Possible causes for task termination:
    --
    --    Normal means that the task terminates due to completing the
@@ -361,12 +361,12 @@ package System.Tasking is
    --    handled_Exception means that the task terminates because of exception
    --    raised by the execution of its task_body.
 
---   type Termination_Handler is access protected procedure
---     (Cause : Cause_Of_Termination;
---      T     : Task_Id;
---      X     : Ada.Exceptions.Exception_Occurrence);
---   --  Used to represent protected procedures to be executed when task
---   --  terminates.
+   type Termination_Handler is access protected procedure
+     (Cause : Cause_Of_Termination;
+      T     : Task_Id;
+      X     : Ada.Exceptions.Exception_Occurrence);
+   --  Used to represent protected procedures to be executed when task
+   --  terminates.
 
    ------------------------------------
    -- Dispatching domain definitions --
@@ -689,7 +689,7 @@ package System.Tasking is
       --
       --  Protection: Only accessed by Self
 
---      Fall_Back_Handler : Termination_Handler;
+      Fall_Back_Handler : Termination_Handler;
       --  This is the fall-back handler that applies to the dependent tasks of
       --  the task.
       --

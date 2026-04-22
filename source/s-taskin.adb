@@ -139,7 +139,7 @@ package body System.Tasking is
 --      T.Common.Activation_Failed        := False;
 --      T.Common.Task_Info                := Task_Info;
       T.Common.Global_Task_Lock_Nesting := 0;
---      T.Common.Fall_Back_Handler        := null;
+      T.Common.Fall_Back_Handler        := null;
 --      T.Common.Specific_Handler         := null;
 --      T.Common.Debug_Events             := [others => False];
       T.Common.Task_Image_Len           := 0;
