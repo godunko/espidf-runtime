@@ -10,8 +10,11 @@ with System.FreeRTOS;
 with System.OS_Interface;
 with System.OS_Primitives;
 with System.Parameters;
+with System.Soft_Links;
 
 package body System.Task_Primitives.Operations is
+
+   package SSL renames System.Soft_Links;
 
    use System.FreeRTOS;
    use System.OS_Interface;
@@ -96,6 +99,14 @@ package body System.Task_Primitives.Operations is
      (Thread         : Thread_Id;
       Sec_Stack_Size : Size_Type := Unspecified_Size)
      return Task_Id is separate;
+
+   -----------------------
+   -- Local Subprograms --
+   -----------------------
+
+   function Is_Task_Context return Boolean;
+   --  This function returns True if the current execution is in the context of
+   --  a task, and False if it is an interrupt context.
 
    ----------
    -- Self --
@@ -264,6 +275,185 @@ package body System.Task_Primitives.Operations is
       vTaskDelete (T.Common.LL.Thread);
    end Abort_Task;
 
+   ----------------
+   -- Initialize --
+   ----------------
+
+   procedure Initialize (S : in out Suspension_Object) is
+      Success : BaseType_t;
+
+   begin
+      --  Initialize internal state (always to False (RM D.10(6)))
+
+      S.State := False;
+      S.Waiting := False;
+
+      --  Initialize internal mutex
+
+      S.L := xSemaphoreCreateBinary;
+      pragma Assert (S.L /= Null_SemaphoreHandle_t);
+
+      Success := xSemaphoreGive (S.L);
+      pragma Assert (Success = pdTRUE);
+      --  Binary semaphore (opposite to mutex) is in "unavailable" state after
+      --  creation and must be "given" first.
+
+      --  Initialize internal condition variable
+
+      S.CV := xSemaphoreCreateBinary;
+      pragma Assert (S.CV /= Null_SemaphoreHandle_t);
+   end Initialize;
+
+   --------------
+   -- Finalize --
+   --------------
+
+   procedure Finalize (S : in out Suspension_Object) is
+      pragma Unmodified (S);
+      --  S may be modified on other targets, but not on FreeRTOS
+
+   begin
+      --  Destroy internal mutex
+
+      vSemaphoreDelete (S.L);
+
+      --  Destroy internal condition variable
+
+      vSemaphoreDelete (S.CV);
+   end Finalize;
+
+   -------------------
+   -- Current_State --
+   -------------------
+
+   function Current_State (S : Suspension_Object) return Boolean is
+   begin
+      --  We do not want to use lock on this read operation. State is marked
+      --  as Atomic so that we ensure that the value retrieved is correct.
+
+      return S.State;
+   end Current_State;
+
+   ---------------
+   -- Set_False --
+   ---------------
+
+   procedure Set_False (S : in out Suspension_Object) is
+      Result : BaseType_t;
+
+   begin
+      SSL.Abort_Defer.all;
+
+      Result := xSemaphoreTake (S.L, portMAX_DELAY);
+      pragma Assert (Result = pdTRUE);
+
+      S.State := False;
+
+      Result := xSemaphoreGive (S.L);
+      pragma Assert (Result = pdTRUE);
+
+      SSL.Abort_Undefer.all;
+   end Set_False;
+
+   --------------
+   -- Set_True --
+   --------------
+
+   procedure Set_True (S : in out Suspension_Object) is
+      Result : BaseType_t;
+
+   begin
+      --  Set_True can be called from an interrupt context, in which case
+      --  Abort_Defer is undefined.
+
+      if Is_Task_Context then
+         SSL.Abort_Defer.all;
+      end if;
+
+      Result := xSemaphoreTake (S.L, portMAX_DELAY);
+      pragma Assert (Result = pdTRUE);
+
+      --  If there is already a task waiting on this suspension object then we
+      --  resume it, leaving the state of the suspension object to False, as it
+      --  is specified in (RM D.10 (9)). Otherwise, it just leaves the state to
+      --  True.
+
+      if S.Waiting then
+         S.Waiting := False;
+         S.State := False;
+
+         Result := xSemaphoreGive (S.CV);
+         pragma Assert (Result = pdTRUE);
+      else
+         S.State := True;
+      end if;
+
+      Result := xSemaphoreGive (S.L);
+      pragma Assert (Result = pdTRUE);
+
+      --  Set_True can be called from an interrupt context, in which case
+      --  Abort_Undefer is undefined.
+
+      if Is_Task_Context then
+         SSL.Abort_Undefer.all;
+      end if;
+   end Set_True;
+
+   ------------------------
+   -- Suspend_Until_True --
+   ------------------------
+
+   procedure Suspend_Until_True (S : in out Suspension_Object) is
+      Result : BaseType_t;
+
+   begin
+      SSL.Abort_Defer.all;
+
+      Result := xSemaphoreTake (S.L, portMAX_DELAY);
+      pragma Assert (Result = pdTRUE);
+
+      if S.Waiting then
+
+         --  Program_Error must be raised upon calling Suspend_Until_True
+         --  if another task is already waiting on that suspension object
+         --  (RM D.10(10)).
+
+         Result := xSemaphoreGive (S.L);
+         pragma Assert (Result = pdTRUE);
+
+         SSL.Abort_Undefer.all;
+
+         raise Program_Error;
+
+      else
+         --  Suspend the task if the state is False. Otherwise, the task
+         --  continues its execution, and the state of the suspension object
+         --  is set to False (RM D.10 (9)).
+
+         if S.State then
+            S.State := False;
+
+            Result := xSemaphoreGive (S.L);
+            pragma Assert (Result = pdTRUE);
+
+            SSL.Abort_Undefer.all;
+
+         else
+            S.Waiting := True;
+
+            --  Release the mutex before sleeping
+
+            Result := xSemaphoreGive (S.L);
+            pragma Assert (Result = pdTRUE);
+
+            SSL.Abort_Undefer.all;
+
+            Result := xSemaphoreTake (S.CV, portMAX_DELAY);
+            pragma Assert (Result = pdTRUE);
+         end if;
+      end if;
+   end Suspend_Until_True;
+
    --------------------
    -- Check_No_Locks --
    --------------------
@@ -301,6 +491,15 @@ package body System.Task_Primitives.Operations is
    begin
       Unlock (Single_RTS_Lock'Access);
    end Unlock_RTS;
+
+   ---------------------
+   -- Is_Task_Context --
+   ---------------------
+
+   function Is_Task_Context return Boolean is
+   begin
+      return System.FreeRTOS.xPortInIsrContext = System.FreeRTOS.pdFALSE;
+   end Is_Task_Context;
 
    ----------------
    -- Initialize --

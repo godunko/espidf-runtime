@@ -32,6 +32,9 @@ package System.FreeRTOS is
    function xTaskGetTickCount return TickType_t
      with Import, Convention => C, External_Name => "xTaskGetTickCount";
 
+   function xPortInIsrContext return BaseType_t
+     with Import, Convention => C, External_Name => "xPortInIsrContext";
+
    type TaskHandle_t is private;
 
    Null_TaskHandle_t : constant TaskHandle_t;
