@@ -564,9 +564,9 @@ package System.Tasking is
       --  are invoked from protected actions. pragma Atomic is used because it
       --  can be read/written from protected interrupt handlers.
 
---      Task_Image : String (1 .. System.Parameters.Max_Task_Image_Length);
---      --  Hold a string that provides a readable id for task, built from the
---      --  variable of which it is a value or component.
+      Task_Image : String (1 .. System.Parameters.Max_Task_Image_Length);
+      --  Hold a string that provides a readable id for task, built from the
+      --  variable of which it is a value or component.
 
       Task_Image_Len : Natural;
       --  Actual length of Task_Image

@@ -81,8 +81,8 @@ begin
 
    Self_Id.Common.State := Runnable;
 --   Self_Id.Awake_Count := 1;
---
---   Self_Id.Common.Task_Image (1 .. 14) := "foreign thread";
+
+   Self_Id.Common.Task_Image (1 .. 14) := "foreign thread";
    Self_Id.Common.Task_Image_Len := 14;
 
    --  Since this is not an ordinary Ada task, we will start out undeferred

@@ -171,8 +171,8 @@ package body System.Tasking is
    -- Initialize --
    ----------------
 
---   Main_Task_Image : constant String := "main_task";
---   --  Image of environment task
+   Main_Task_Image : constant String := "main_task";
+   --  Image of environment task
 
    Main_Priority : constant Integer;
    pragma Import (C, Main_Priority, "__gl_main_priority");
@@ -248,8 +248,8 @@ package body System.Tasking is
       STPO.Set_Priority (T, T.Common.Base_Priority);
       T.Common.State := Runnable;
       T.Common.Task_Image_Len := Main_Task_Image'Length;
---      T.Common.Task_Image (Main_Task_Image'Range) := Main_Task_Image;
---
+      T.Common.Task_Image (Main_Task_Image'Range) := Main_Task_Image;
+
 --      Dispatching_Domain_Tasks :=
 --        new Array_Allocated_Tasks'
 --          (Multiprocessors.CPU'First .. Multiprocessors.Number_Of_CPUs => 0);

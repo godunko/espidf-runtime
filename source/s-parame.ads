@@ -170,13 +170,13 @@ package System.Parameters is
 --
 --   Max_Attribute_Count : constant := 32;
 --   --  Number of task attributes stored in the task control block
---
---   -----------------------
---   -- Task Image Length --
---   -----------------------
---
---   Max_Task_Image_Length : constant := 256;
---   --  This constant specifies the maximum length of a task's image
+
+   -----------------------
+   -- Task Image Length --
+   -----------------------
+
+   Max_Task_Image_Length : constant := 32;
+   --  This constant specifies the maximum length of a task's image
 
    ------------------------------
    -- Exception Message Length --
