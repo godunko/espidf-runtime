@@ -567,10 +567,10 @@ package System.Tasking is
 --      Task_Image : String (1 .. System.Parameters.Max_Task_Image_Length);
 --      --  Hold a string that provides a readable id for task, built from the
 --      --  variable of which it is a value or component.
---
---      Task_Image_Len : Natural;
---      --  Actual length of Task_Image
---
+
+      Task_Image_Len : Natural;
+      --  Actual length of Task_Image
+
 --      Call : Entry_Call_Link;
 --      --  The entry call that has been accepted by this task.
 --      --

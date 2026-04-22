@@ -142,8 +142,8 @@ package body System.Tasking is
 --      T.Common.Fall_Back_Handler        := null;
 --      T.Common.Specific_Handler         := null;
 --      T.Common.Debug_Events             := [others => False];
---      T.Common.Task_Image_Len           := 0;
---
+      T.Common.Task_Image_Len           := 0;
+
 --      if T.Common.Parent = null then
 
          --  For the environment task, the adjusted stack size is meaningless.
@@ -247,7 +247,7 @@ package body System.Tasking is
       STPO.Initialize (T);
       STPO.Set_Priority (T, T.Common.Base_Priority);
       T.Common.State := Runnable;
---      T.Common.Task_Image_Len := Main_Task_Image'Length;
+      T.Common.Task_Image_Len := Main_Task_Image'Length;
 --      T.Common.Task_Image (Main_Task_Image'Range) := Main_Task_Image;
 --
 --      Dispatching_Domain_Tasks :=
