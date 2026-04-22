@@ -13,8 +13,7 @@ While many embedded runtimes are "Zero Footprint", this runtime provides a rich 
  * Exceptions: Full support for exception propagation and `Ada.Exceptions`.
  * Memory Management: Static secondary stack support and Controlled Objects (`Ada.Finalization`).
  * Standard Library: Includes `Ada.Containers.*`, `Ada.Strings.*`, `Ada.Numerics.*`, and more.
- * Multi-Threading: While Ada native Tasking and Protected Objects are not implemented, the runtime is thread-safe.
-Ada code can be safely executed within multiple FreeRTOS tasks and across multiple CPU cores.
+ * Native and Foreign Tasking: Ada tasks and protected objects are supported. Ada code can be safely executed within multiple FreeRTOS tasks and across multiple CPU cores.
  * ISR Compatibility: Ada subprograms can be used as Interrupt Service Routine (ISR) callbacks (note: avoid RTS-locking features within ISRs).
 
 ## Supported Architectures
