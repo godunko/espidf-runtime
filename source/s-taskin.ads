@@ -633,7 +633,7 @@ package System.Tasking is
       --  only modified by Self after that. Can be read by any task via
       --  Ada.Task_Identification.Activation_Is_Complete; hence Atomic.
 
---      Wait_Count : Natural;
+      Wait_Count : Natural;
       --  This count is used by a task that is waiting for other tasks. At all
       --  other times, the value should be zero. It is used differently in
       --  several different states. Since a task cannot be in more than one of
