@@ -55,19 +55,20 @@ jobs:
         cat alire.toml
         alr --non-interactive with --solve
 
-    - name: Build tests
+    - name: Build and Run tests
       run: |
         . $IDF_PATH/export.sh
         cd test_apps/acats/bundle_1
         idf.py set-target esp32s3
-        idf.py build
-
-    - name: Run tests
-      run: |
-        . $IDF_PATH/export.sh
-        cd test_apps/acats/bundle_1
         idf.py qemu --qemu-extra-args --no-reboot | tee log
         ../support/report.sh log
+
+#    - name: Run tests
+#      run: |
+#        . $IDF_PATH/export.sh
+#        cd test_apps/acats/bundle_1
+#        idf.py qemu --qemu-extra-args --no-reboot | tee log
+#        ../support/report.sh log
 
     - name: Publish Test Report
       uses: ctrf-io/github-test-reporter@v1
