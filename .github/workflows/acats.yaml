@@ -64,6 +64,8 @@ jobs:
 
     - name: Run tests
       run: |
+        . $IDF_PATH/export.sh
+        cd test_apps/acats/bundle_1
         idf.py qemu --qemu-extra-args --no-reboot | tee log
         ../support/report.sh log
 
