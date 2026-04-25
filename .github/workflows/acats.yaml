@@ -55,11 +55,15 @@ jobs:
         cat alire.toml
         alr --non-interactive with --solve
 
-    - name: Build and Run tests
+    - name: Build tests
       run: |
         . $IDF_PATH/export.sh
         cd test_apps/acats/bundle_1
         idf.py set-target esp32s3
+        idf.py build
+
+    - name: Run tests
+      run: |
         idf.py qemu --qemu-extra-args --no-reboot | tee log
         ../support/report.sh log
 
