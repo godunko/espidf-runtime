@@ -11,6 +11,7 @@
     {
       "parameters":
       {
+        "Preallocated_Stacks": false,
         "Suppress_Standard_Library": false
       },
       "restrictions":
