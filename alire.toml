@@ -14,11 +14,3 @@ auto-gpr-with=false
 generate_ada = false
 generate_c = false
 generate_gpr = false
-
-[environment]
-A0B_TOOLS_SVD.set = "${CRATE_ROOT}/svd/esp32s3.svd"
-A0B_TOOLS_RUNTIME_DESCRIPTION.set = "${CRATE_ROOT}/runtime-esp32s3.json"
-
-[[depends-on]]
-gnat_xtensa_esp32_elf = "^15"
-xtensa_dynconfig = "*"
