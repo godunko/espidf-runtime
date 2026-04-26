@@ -8,6 +8,7 @@ jobs:
     container:
       image: ghcr.io/godunko/espidf-alire:main
     strategy:
+      fail-fast: false
       matrix:
         esp32_mcu: [esp32c3, esp32s3]
     steps:
