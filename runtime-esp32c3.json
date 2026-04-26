@@ -144,7 +144,7 @@
     "Add_Image_Util": "yes",
     "Add_Image_Wide_Char": "yes",
     "Add_IO_Exceptions": "yes",
-    "Add_Math_Lib": "hardfloat",
+    "Add_Math_Lib": "softfloat",
     "Add_Streams": "yes",
     "Add_Value_Bool": "yes",
     "Add_Value_Char": "yes",
