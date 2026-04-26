@@ -64,7 +64,7 @@ jobs:
       run: |
         . $IDF_PATH/export.sh
         cd test_apps/acats/bundle_1
-        idf.py set-target esp32s3
+        idf.py set-target ${{ matrix.esp32_mcu }}
         idf.py qemu --qemu-extra-args --no-reboot | tee log
         ../support/report.sh log
 
