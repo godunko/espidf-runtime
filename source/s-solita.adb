@@ -147,12 +147,18 @@ package body System.Soft_Links.Tasking is
    --------------------------------
 
    procedure Task_Termination_Handler_T (Excep : SSL.EO) is
+      pragma Unreferenced (Excep);
 --      Self_Id : constant System.Tasking.Task_Id := STPO.Self;
 --      Cause   : System.Tasking.Cause_Of_Termination;
 --      EO      : Ada.Exceptions.Exception_Occurrence;
 
    begin
-      raise Program_Error;
+      null;
+      --  Originally raised Program_Error here, but that triggers libgcc's
+      --  FDE cache mutex (a FreeRTOS queue) causing a crash on ESP32S3.
+      --  This handler is invoked for any task with an unhandled exception;
+      --  silently returning is safe — the task will be terminated by
+      --  Task_Wrapper's own termination handling.
       --  We can only be here because we are terminating the environment task.
       --  Task termination for all other tasks is handled in the Task_Wrapper.
 
